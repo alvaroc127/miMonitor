@@ -310,7 +310,6 @@ public  synchronized int procesarDatosecg1(){
                   if(band.length()==4){
                   if(band.equals(bandera2)){
                     estado=false;
-                    System.out.println(band+"xx"+bandera2);
                     band="";
                      }
                   }
@@ -370,6 +369,5 @@ public  synchronized int procesarDatosecg1(){
     public void setPos1(int pos1) {
         this.pos1 = pos1;
     }
-     
-     
+    
 }
