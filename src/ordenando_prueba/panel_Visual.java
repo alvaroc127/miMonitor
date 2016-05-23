@@ -5,6 +5,7 @@
  */
 package ordenando_prueba;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
@@ -13,9 +14,14 @@ import javax.swing.Timer;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+//import org.jfree.chart.plot.CategoryPlot;
+//import org.jfree.chart.plot.Plot;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.DynamicTimeSeriesCollection;
 import org.jfree.data.time.Millisecond;
-import org.jfree.data.time.Second;
+
 
 /**
  *
@@ -55,6 +61,12 @@ public class panel_Visual extends JPanel implements ActionListener,Runnable{
 											tieneLeyenda(),
 											tienToolTip(),
 											tineUrl());//crea una grafica de tiempo
+        graphicaDeTiempo.setBackgroundPaint(new Color(0, 0, 0, 0));
+        XYPlot plot=graphicaDeTiempo.getXYPlot();
+        plot.setBackgroundPaint(Color.BLACK);
+        XYLineAndShapeRenderer render=(XYLineAndShapeRenderer)plot.getRenderer();
+        plot.getRangeAxis().setRange(20,220);
+        plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.GREEN);
     ChartPanel panelDeLaGraphica = new ChartPanel(graphicaDeTiempo);//crea un panel para graficas
     add(panelDeLaGraphica);
     cronometro.start();

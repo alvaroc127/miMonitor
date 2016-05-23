@@ -3,6 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package ordenando_prueba;
 
 import java.io.DataInputStream;
@@ -117,8 +122,10 @@ public class Conecxion_Envio extends Thread{
         }
         if(ban==true){
             synchronized(lista){
+                if(a>2){
             lista.add(a);
             lista.notify();
+                }
             }
         }
         }while(salid);
@@ -343,7 +350,6 @@ public  synchronized int procesarDatosecg1(){
       
      public void limpiarlstia(){
     lista.clear();
-         System.out.println(lista.size());
     }
 
     public ArrayList getLista() {
