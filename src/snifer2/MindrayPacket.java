@@ -11,25 +11,28 @@ import java.util.ArrayList;
  * class mindray Packet, this is a references of model packet mindray from conection,
  * witch system monitor control(Hypervisor)
  * this class permite identify the compnents of packet. 
- * @author ELECTRONICA
+ * @author UCDIT
+ * @created 27/05/2016
+ * @version 1.0
  */
-public class MindrayPacket {
+public class MindrayPacket implements Trama{
     /**
      * Atribute of class mindrayPacket
-     * 
      */
-    private Encabezado enca;
+    private Header enca=new Header();
     private ArrayList<Subtrama> subtramas=new ArrayList();
             
-    
+    /**
+     * Constructor overload
+     */
     public MindrayPacket() {
     }
     
-    public Encabezado getEnca() {
+    public Header getEnca() {
         return enca;
     }
 
-    public void setEnca(Encabezado enca) {
+    public void setEnca(Header enca) {
         this.enca = enca;
     }
 
@@ -40,8 +43,29 @@ public class MindrayPacket {
     public void setSubtramas(ArrayList<Subtrama> subtramas) {
         this.subtramas = subtramas;
     }
+
+    
+      
+    /**
+     * this is metod o clasification the diferent datas
+     * of the packet.
+     * @param dat are the datas from trama.
+     * @return null.
+     */
+    
+    @Override
+    public void clasifydata(ArrayList data) {
+        int pos=enca.FindStart(data);
+        
+        
+    }
+
+  
+  
     
     
+    
+   
 
     
     

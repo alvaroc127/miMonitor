@@ -5,7 +5,6 @@
  */
 package snifer2;
 
-import static com.sun.media.jfxmediaimpl.MediaUtils.error;
 import java.util.ArrayList;
 import java.util.Date;
 import org.jnetpcap.*;
@@ -84,25 +83,30 @@ public class CapturaRed {
                 Tcp TCP=new Tcp();
                 Ip4 ip=new Ip4();
                 Udp UDP=new Udp();
+                MindrayPacket MP=new MindrayPacket();
+                
               
             @Override
             public void nextPacket(PcapPacket paqute, String user) {
+                ArrayList packetDat=new ArrayList();
                     if(paqute.hasHeader(TCP.ID)){
                         int tama=paqute.size();
-                        JBuffer buffer= paqute; 
-                       paqute.getHeader(TCP);
-                       byte []array=buffer.getByteArray(0, tama);
+                       paqute.getHeader(TCP); 
+                       JBuffer buffer= paqute;
+                       byte array[]=buffer.getByteArray(0, tama);
                        System.out.println("fuente :"+TCP.source());
                        System.out.println("Destinio :"+TCP.destination());
                        System.out.println("Paquetes recibido el: "+new Date(paqute.getCaptureHeader().timestampInMillis()));
                        System.out.println("el tamaño del paqute capturado  :"+paqute.getCaptureHeader().caplen());
                        System.out.println("el tamño del paquete original :"+paqute.getCaptureHeader().wirelen());
                        System.out.println(paqute);
-                       for(int j=0;j<array.length;j++){
-                           System.out.println("datos : "+j+": "+array[j]);
+                       for(int i=0;i<array.length;i++){
+                           packetDat.add(array[i]);
                        }
-                       System.out.println(user);
-                       System.out.println(paqute.toHexdump());
+                       MP.clasifydata(packetDat);
+                        System.out.println("########################");
+                       //System.out.println(user);
+                       //System.out.println(paqute.toHexdump());
                    }
                 }
             };

@@ -6,16 +6,23 @@
 package snifer2;
 
 /**
- *
- * @author ELECTRONICA
+ * this class is a references to datas fron  trama
+ * @author UCDIT
+ * @created 17/05/2016
+ * @version 1.0
  */
 public class Subtrama {
-    
+    /**
+     * this are attribs fron subtrama
+     */
     private byte data[];
     private byte end[];
     private int size;
     private byte start[];
 
+    /**
+     * this is a constructor of subtrama
+     */
     public Subtrama() {
     }
 
