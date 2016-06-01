@@ -104,6 +104,7 @@ public class CapturaRed {
                            packetDat.add(array[i]);
                        }
                        MP.clasifydata(packetDat);
+                        System.out.println("este es el tmanio del Array :"+packetDat.size());
                         System.out.println("########################");
                        //System.out.println(user);
                        //System.out.println(paqute.toHexdump());

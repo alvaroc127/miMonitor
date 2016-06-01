@@ -104,7 +104,7 @@ public class Header {
                     cad=cad.concat(String.valueOf((int)lista.get(x)));
                        if(cad.length()==val.length()){
                    if(cad.equals(val)){
-                       //System.out.println("Exito##&&&////&&&&//&&&&&");
+                       System.out.println("Exito##&&&////&&&&//&&&&&");
                        ban=false;
                        sali=i;
                        this.start=aux;
@@ -131,7 +131,7 @@ public class Header {
                        ban=false;
                        sali=i;
                        this.start=aux;
-                       //System.out.println("Exito");
+                       System.out.println("Exito");
                    }else{
                       
                        String cad1=new String();
@@ -152,8 +152,125 @@ public class Header {
     return sali;
     }
 
-  
     
+    /**
+     * This method load the size of packet mindray
+     * @param pos is a pos the end start header segment mindray
+     * @param array of datas in the packet
+     * @return pos the array for datas packet start hi_zero
+     */
+    public int Findsize(int pos,ArrayList array){
+        this.size[0]=(byte)array.get(pos);
+        this.size[1]=(byte)array.get(pos+1);  
+       // System.out.printf("0x%02X",size[0]);
+        //System.out.println("");
+        //System.out.printf("0x%02X",size[1]);
+    return pos++;
+    }
     
+    /**
+     * This method load the segment cero for header
+     * @param pos this actual index the array posicion
+     * @param array datas from packet TCP
+     * @return  posicion of array for dtas packet crc 
+     */
+    public int FindHi_zero(int pos,ArrayList array){
+        for(int i=0;i<Hi_ze.length;i++){
+            Hi_ze[i]=(byte)array.get(pos);
+            //System.out.printf("0x%02X",Hi_ze[i]);
+            //System.out.println("");
+            pos++;
+        }
+    return pos++;
+    }
     
+    /**
+     * This method load the segment for header,
+     * crc is unknowed the funcion
+     * @param pos is the posicion actual in array of datas from packet 
+     * @param array are datas from packet
+     * @return pos actual of array datas in packet
+     */
+    public int FindCrc(int pos, ArrayList array){
+        this.crc[0]=(byte)array.get(pos);
+        this.crc[1]=(byte)array.get(++pos);
+       //System.out.printf("0x%02X",crc[0]);
+       //System.out.printf("0x%02X",crc[1]);
+       //System.out.println("---------");
+    return pos++;
+    }
+    
+    /**
+     * This Method load the zeros low, from packet mindray
+     * @param pos
+     * @param array
+     * @return 
+     */
+    public int Findlow_zer(int pos, ArrayList array){
+        for(int j=0;j<this.low_zer.length;j++){
+        low_zer[j]=(byte)array.get(pos);
+           //System.out.printf("0x%02X",low_zer[j]);
+          //System.out.println("");
+        pos++;
+        }
+       return pos;
+    }
+    
+    /**
+     * This methos load the code of function use mindray
+     * @param pos this index a posicion actual
+     * @param array witch the datas from packet
+     * @return  posicion current from array.
+     */
+    
+    public int FindCode1(int pos,ArrayList array){
+    this.code1[0]=(byte)array.get(pos);
+    this.code2[1]=(byte)array.get(++pos);
+    //System.out.printf("0x%02X",code1[0]);
+          //System.out.println("");
+    //System.out.printf("0x%02X",code2[1]);
+    return pos++;
+    }
+    
+    /**
+     * 
+     * 
+     * @param pos
+     * @param array
+     * @return 
+     */
+    public int FindConst1(int pos,ArrayList array){
+        this.conts1[0]=(byte)array.get(++pos);
+        this.conts1[1]=(byte)array.get(++pos);
+        this.conts1[2]=(byte)array.get(++pos);
+        //System.out.printf("0x%02X",conts1[0]);
+          //System.out.println("");
+        //System.out.printf("0x%02X",conts1[1]);
+        //System.out.println("");
+        //System.out.printf("0x%02X",conts1[2]);
+        return pos++;
+    }
+    
+    /**
+     * 
+     * @param pos
+     * @param array
+     * @return 
+     */
+    
+    public int FindCode2(int pos,ArrayList array){
+        this.code2[0]=(byte)array.get(++pos);
+        this.code2[1]=(byte)array.get(++pos);
+        //System.out.printf("0x%02X",code2[0]);
+        //System.out.println("");
+        //System.out.printf("0x%02X",code2[1]);
+    return pos;
+    }
+    
+    public int sizePacket(){
+        String var=new String();
+        var=String.format("%02X",size[0]);
+        var=var.concat(String.format("%02X",size[1]));
+        return Integer.parseInt(var, 16);
+    }
 }

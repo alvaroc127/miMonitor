@@ -56,8 +56,21 @@ public class MindrayPacket implements Trama{
     @Override
     public void clasifydata(ArrayList data) {
         int pos=enca.FindStart(data);
-        
-        
+        if(pos!=-1){
+            pos++;
+            //System.out.println(pos);
+            //System.out.println(data.subList(pos-6, pos).toString());
+                pos=enca.Findsize(pos, data);
+                pos=pos+2;
+                pos=enca.FindHi_zero(pos, data);
+                pos=enca.FindCrc(pos, data);
+                ++pos;
+                pos=enca.Findlow_zer(pos, data);
+                pos=enca.FindCode1(pos, data);
+                pos=enca.FindConst1(pos, data);
+                pos=enca.FindCode2(pos, data);
+                enca.sizePacket();
+            }
     }
 
   

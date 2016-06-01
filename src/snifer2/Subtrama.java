@@ -5,6 +5,8 @@
  */
 package snifer2;
 
+import java.util.ArrayList;
+
 /**
  * this class is a references to datas fron  trama
  * @author UCDIT
@@ -15,10 +17,10 @@ public class Subtrama {
     /**
      * this are attribs fron subtrama
      */
-    private byte data[];
-    private byte end[];
-    private int size;
-    private byte start[];
+    private ArrayList data;
+    private byte end;
+    private byte size[];
+    private byte start;
 
     /**
      * this is a constructor of subtrama
@@ -26,37 +28,43 @@ public class Subtrama {
     public Subtrama() {
     }
 
-    public byte[] getData() {
+    public ArrayList getData() {
         return data;
     }
 
-    public void setData(byte[] data) {
+    public void setData(ArrayList data) {
         this.data = data;
     }
 
-    public byte[] getEnd() {
+     
+
+    public byte getEnd() {
         return end;
     }
 
-    public void setEnd(byte[] end) {
+    public void setEnd(byte end) {
         this.end = end;
     }
 
-    public int getSize() {
+    public byte[] getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(byte size[]) {
         this.size = size;
     }
 
-    public byte[] getStart() {
+    public byte getStart() {
         return start;
     }
 
-    public void setStart(byte[] start) {
+    public void setStart(byte start) {
         this.start = start;
     }
     
+    public int findstart(int pos, ArrayList array){
+    
+    return 0;
+    }
     
 }
