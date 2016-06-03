@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * this class permite identify the compnents of packet. 
  * @author UCDIT
  * @created 27/05/2016
- * @version 1.0
+ * @version 2.0
  */
 public class MindrayPacket implements Trama{
     /**
@@ -27,7 +27,7 @@ public class MindrayPacket implements Trama{
      */
     public MindrayPacket() {
     }
-    
+
     public Header getEnca() {
         return enca;
     }
@@ -35,7 +35,7 @@ public class MindrayPacket implements Trama{
     public void setEnca(Header enca) {
         this.enca = enca;
     }
-
+    
     public ArrayList<Subtrama> getSubtramas() {
         return subtramas;
     }
@@ -54,8 +54,8 @@ public class MindrayPacket implements Trama{
      */
     
     @Override
-    public void clasifydata(ArrayList data) {
-        int pos=enca.FindStart(data);
+    public int clasifydata(ArrayList data,int post) {
+        int pos=enca.FindStart(data,post);
         if(pos!=-1){
             pos++;
             //System.out.println(pos);
@@ -69,19 +69,26 @@ public class MindrayPacket implements Trama{
                 pos=enca.FindCode1(pos, data);
                 pos=enca.FindConst1(pos, data);
                 pos=enca.FindCode2(pos, data);
-                enca.sizePacket();
+                //la subtrama se debe sacar en cualquier circustancia, pero si 
+                //la trama no tiene el tamaño suficiente la subtrama se cargara con el restane de la subtrama
+                
             }
+        return ++pos;
     }
 
-  
-  
+    @Override
+    public void cargarSubTram(ArrayList data, int pos) {
+        Subtrama sub=new Subtrama();
+        sub.findstart(pos, data);
+        sub.findSize(pos, data);
+        sub.findEndh(pos, data);
+        int fin=sub.findtoNewSub(pos, data);
+        if(fin!=-1){
+        sub.addData(pos, fin, data);
+        }
+    }
     
     
     
-   
-
     
-    
-
-
 }

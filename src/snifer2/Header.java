@@ -88,13 +88,13 @@ public class Header {
      * @return sali is a posicion in the vector.
      */
     
-    public int FindStart(ArrayList array){
+    public int FindStart(ArrayList array,int post){
         String val="15015700";
         String cad=new String();
         byte aux[]=new byte[6];
         boolean ban=true;
         int sali=-1,pos=0,valor;
-        for(int i=0;i<array.size()&&ban==true;i++){
+        for(int i=post;i<array.size()&&ban==true;i++){
             valor=Byte.toUnsignedInt((byte)array.get(i));
             aux[pos]= (byte)array.get(i);
             pos++;
@@ -133,7 +133,6 @@ public class Header {
                        this.start=aux;
                        System.out.println("Exito");
                    }else{
-                      
                        String cad1=new String();
                        for(int p=1;p<cad.length();p++){
                            cad1+=cad.charAt(p);

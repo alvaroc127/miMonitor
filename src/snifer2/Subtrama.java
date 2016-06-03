@@ -17,15 +17,15 @@ public class Subtrama {
     /**
      * this are attribs fron subtrama
      */
-    private ArrayList data;
-    private byte end;
+    private ArrayList data=new ArrayList();
+    private byte endH;
     private byte size[];
     private byte start;
 
     /**
      * this is a constructor of subtrama
      */
-    public Subtrama() {
+    public Subtrama(){
     }
 
     public ArrayList getData() {
@@ -39,11 +39,11 @@ public class Subtrama {
      
 
     public byte getEnd() {
-        return end;
+        return endH;
     }
 
     public void setEnd(byte end) {
-        this.end = end;
+        this.endH = end;
     }
 
     public byte[] getSize() {
@@ -63,8 +63,40 @@ public class Subtrama {
     }
     
     public int findstart(int pos, ArrayList array){
-    
-    return 0;
+    start=(byte)array.get(pos);
+    return ++pos;
     }
+    
+    public int findSize(int pos,ArrayList array){
+    size[0]=(byte)array.get(pos);
+    size[1]=(byte)array.get(++pos);
+    return ++pos;
+    }
+    
+    public int findEndh(int pos,ArrayList array){    
+    endH=(byte)array.get(pos);
+    return ++pos;
+    }
+    
+    public int findtoNewSub(int pos,ArrayList array){
+        boolean ban=true;
+        int sali=-1;
+        for(int i=pos;i<array.size()&&ban==true;i++){
+            if((int)array.get(i)<10){
+                ban=false;
+                sali=i;
+            }
+        }
+    return sali;
+    }
+    
+    
+    public int addData(int posI,int fin,ArrayList array){
+        for(int j=posI;j<fin;j++){
+               data.add(array.get(j));
+        }
+        return fin;
+    }
+    
     
 }

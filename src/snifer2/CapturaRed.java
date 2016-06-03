@@ -22,11 +22,16 @@ import org.jnetpcap.protocol.tcpip.Udp;
  *
  * @author ELECTRONICA
  */
-public class CapturaRed {
+public class CapturaRed extends Thread {
     private ArrayList<PcapIf> dispositivos=new ArrayList<PcapIf>();
     private StringBuilder error=new StringBuilder();
+    private ArrayList packetes=new ArrayList();
     private PcapIf dispositivo=null;
-    private int ban;
+    private int ban,tamn;
+    private MindrayPacket MP=new MindrayPacket();
+    private   boolean band=true;
+     private boolean ban2=true;
+     private int []vectorGu=new int[2];
     
     
     
@@ -72,6 +77,8 @@ public class CapturaRed {
            int alcanzeCaptura= 64*1024;
            int bandera =Pcap.MODE_PROMISCUOUS;
            int tiemposalida= 10*1000;
+       
+          
            Pcap pcap=Pcap.openLive(dispo.getName(),alcanzeCaptura, bandera, tiemposalida, error);
            if(pcap==null){
                System.out.println("Error abriendo dispositivo de captura"+
@@ -83,15 +90,17 @@ public class CapturaRed {
                 Tcp TCP=new Tcp();
                 Ip4 ip=new Ip4();
                 Udp UDP=new Udp();
-                MindrayPacket MP=new MindrayPacket();
+                
                 
               
             @Override
             public void nextPacket(PcapPacket paqute, String user) {
                 ArrayList packetDat=new ArrayList();
+                 int auxiliar[]=new int[2];
+                
                     if(paqute.hasHeader(TCP.ID)){
                         int tama=paqute.size();
-                       paqute.getHeader(TCP); 
+                       paqute.getHeader(TCP);
                        JBuffer buffer= paqute;
                        byte array[]=buffer.getByteArray(0, tama);
                        System.out.println("fuente :"+TCP.source());
@@ -103,9 +112,50 @@ public class CapturaRed {
                        for(int i=0;i<array.length;i++){
                            packetDat.add(array[i]);
                        }
-                       MP.clasifydata(packetDat);
-                        System.out.println("este es el tmanio del Array :"+packetDat.size());
-                        System.out.println("########################");
+                       tama=contarPacket(packetDat);
+                       if(tama!=0){
+                       auxiliar=buscarTamPacket(packetDat);
+                        if(auxiliar[0]!=0){
+                        band=false;
+                        }
+                       }
+                       if(band==false){
+                           if(ban2==true){
+                           packetes.add(packetDat);
+                            System.out.println("Julioooooo"+packetes.size());
+                            ban2=false;
+                            vectorGu=auxiliar;
+                            tamn=tama;
+                           }else{
+                               System.out.println("auxiliar[0] :"+auxiliar[0]+"auxiliar[1] :"+auxiliar[1]);
+                               System.out.println("se compara :"+(vectorGu[0]-vectorGu[1])+" con :"+TCP.getPayloadLength());
+                           if((vectorGu[0]!=0)&&(vectorGu[0]-vectorGu[1])==TCP.getPayloadLength()&&ban2==false){
+                               System.out.println("ENTROOOOLOLOLOLOLOLOLO");
+                               band=true;
+                               ban2=true;
+                               vectorGu=auxiliar;
+                               for(int i=0;i<packetDat.size();i++){
+                                  ((ArrayList)packetes.get(0)).add(packetDat.get(i));
+                                   System.out.printf("0x%02X",packetDat.get(i));
+                               }
+                               System.out.println("tamaño :"+packetDat.size());
+                               packetDat=(ArrayList)packetes.get(0);
+                               System.out.println("tamaño :"+packetDat.size());
+                               packetes.remove(0);                            
+                               System.out.println("tamaño almacenado de paquetes :"+packetes.size());
+                               //crearPacket(tamn,packetDat);
+                                }
+                           }
+                       }else{
+                           if(band==true&&tama!=0){
+                               System.out.println("SE PASO A CREAR TRAMAS  TRAMAS");
+                               crearPacket(tama, packetDat);
+                           }
+                       }
+                       System.out.println("\n cantidad de paquetes en la trama en la trama :"+tama);
+                       System.out.println("este es el tmanio del Array :"+packetDat.size());
+                       System.out.println("cantaidad de datos en plkay"+TCP.getPayloadLength());
+                       System.out.println("########################");
                        //System.out.println(user);
                        //System.out.println(paqute.toHexdump());
                    }
@@ -116,6 +166,175 @@ public class CapturaRed {
      }
        
        
+
+    public int contarPacket(ArrayList array) {
+        String val="15015700";
+        String cad=new String();
+        int sali=0,valor;
+        for(int i=0;i<array.size();i++){
+            valor=Byte.toUnsignedInt((byte)array.get(i));
+            if(valor>9){
+               ArrayList lista=descomposeNum(valor);
+                for(int x=lista.size()-1;x>=0;x--){
+                    cad=cad.concat(String.valueOf((int)lista.get(x)));
+                       if(cad.length()==val.length()){
+                   if(cad.equals(val)){
+                       System.out.println("Exito##&&&////&&&&//&&&&&");
+                      sali++;
+                      String cad1=new String();
+                       for(int p=1;p<cad.length();p++){
+                           cad1+=cad.charAt(p);
+                        }
+                       cad=cad1;
+                   }else{
+                       String cad1=new String();
+                       for(int p=1;p<cad.length();p++){
+                           cad1+=cad.charAt(p);
+                        }
+                       cad=cad1;
+                 }
+               }       
+             }   
+            }else{
+               cad=cad.concat(String.valueOf(Byte.toUnsignedInt((byte)array.get(i))));
+               if(cad.length()==val.length()){
+                   if(cad.equals(val)){
+                       sali++;
+                       System.out.println("Exito");
+                        String cad1=new String();
+                       for(int p=1;p<cad.length();p++){
+                           cad1+=cad.charAt(p);
+                        }
+                       cad=cad1;
+                   }else{
+                       String cad1=new String();
+                       for(int p=1;p<cad.length();p++){
+                           cad1+=cad.charAt(p);
+                        }
+                       cad=cad1;
+                 }
+               }
+            }
+        } 
+    return sali;   
+    }
+
+  
+    
+     public int[] buscarTamPacket(ArrayList array) {
+        String val="15015700";
+        String cad=new String();
+        int valor,aux,aux1;
+        int valore[]=new int[2];
+        for(int i=0;i<array.size();i++){
+            valor=Byte.toUnsignedInt((byte)array.get(i));
+            if(valor>9){
+               ArrayList lista=descomposeNum(valor);
+                for(int x=lista.size()-1;x>=0;x--){
+                    cad=cad.concat(String.valueOf((int)lista.get(x)));
+                       if(cad.length()==val.length()){
+                   if(cad.equals(val)){
+                       System.out.println("Exito##&&&////&&&&//&&&&&");
+                      String cad1=new String();
+                       for(int p=1;p<cad.length();p++){
+                           cad1+=cad.charAt(p);
+                        }
+                       cad=cad1;
+                   }else{
+                       String cad1=new String();
+                       for(int p=1;p<cad.length();p++){
+                           cad1+=cad.charAt(p);
+                        }
+                       cad=cad1;
+                 }
+               }       
+             }   
+            }else{
+               cad=cad.concat(String.valueOf(Byte.toUnsignedInt((byte)array.get(i))));
+               if(cad.length()==val.length()){
+                   if(cad.equals(val)){
+                       MP.getEnca().Findsize(i+1, array);
+                       aux=MP.getEnca().sizePacket();
+                       aux1=array.size()-((i+1)-6);
+                       System.out.println(aux+" tamanio paquete mas restante tamanio trama "+aux1);
+                       System.out.println(array.subList((i+1)-6, i).toString());
+                        if(aux>aux1){
+                       valore[0]=aux;
+                       valore[1]=aux1;
+                            System.out.println(aux+" (aux)tmaaño packete mas (valore[1]) bytes restantes de la trama "+valore[1]);
+                        }
+                        String cad1=new String();
+                       for(int p=1;p<cad.length();p++){
+                           cad1+=cad.charAt(p);
+                        }
+                       cad=cad1;
+                   }else{
+                       String cad1=new String();
+                       for(int p=1;p<cad.length();p++){
+                           cad1+=cad.charAt(p);
+                        }
+                       cad=cad1;
+                 }
+               }
+            }
+        } 
+    return  valore;
+    }
+    
+    
+    
+    
+    
+    
+    
+       /**
+     * This method return arrayList witch, the number descompose in untis.
+     * @param number this is the number of descompose
+     * @return  list is a list fron number descompose
+     */
+    public ArrayList descomposeNum(int number){
+        ArrayList descoNum=new ArrayList();
+        int aux=number,aux1;
+        while(aux>0){
+        aux1=aux%10;
+        aux=aux/10;
+        descoNum.add(aux1);
+        }
+    return descoNum;
+    }  
        
-       
+    /**
+     * 
+     * @param numPackets
+     * @param datas
+     * @return 
+     */
+    public ArrayList<Trama> crearPacket(int numPackets,ArrayList datas){
+    ArrayList<Trama> packets=new ArrayList();
+    int pos=0;
+    for(int i=0;i<numPackets;i++){
+        MindrayPacket packt=new MindrayPacket();
+        pos=packt.clasifydata(datas,pos);
+        packets.add(packt);
+        }
+    return packets;
+    }
+
+    @Override
+    public void run(){
+     
+    }
+    
+    
+    public ArrayList clasificPackets(){
+        ArrayList noPacke=new ArrayList();
+        for(int j=0;j<packetes.size();j++){
+            if(contarPacket((ArrayList)packetes.get(j))==0){
+                noPacke.add(packetes.get(j));
+                packetes.remove(j);
+            }
+        }
+        return noPacke;
+    }
+    
 }

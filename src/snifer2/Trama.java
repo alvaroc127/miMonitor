@@ -12,5 +12,6 @@ import java.util.ArrayList;
  * @author ELECTRONICA
  */
 public interface  Trama {
-    public void clasifydata(ArrayList data);
+    public int clasifydata(ArrayList data, int pos);
+    public void cargarSubTram(ArrayList data,int pos);
 }
