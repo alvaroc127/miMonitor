@@ -90,10 +90,11 @@ public class Header {
     
     public int FindStart(ArrayList array,int post){
         String val="15015700";
+        String val1="151500";
         String cad=new String();
         byte aux[]=new byte[6];
         boolean ban=true;
-        int sali=-1,pos=0,valor;
+        int sali=-1,pos=0,valor,cont=0;
         for(int i=post;i<array.size()&&ban==true;i++){
             valor=Byte.toUnsignedInt((byte)array.get(i));
             aux[pos]= (byte)array.get(i);
@@ -102,9 +103,9 @@ public class Header {
                ArrayList lista=descomposeNum(valor);
                 for(int x=lista.size()-1;x>=0;x--){
                     cad=cad.concat(String.valueOf((int)lista.get(x)));
-                       if(cad.length()==val.length()){
+                   if(cad.length()==val.length()){
                    if(cad.equals(val)){
-                       System.out.println("Exito##&&&////&&&&//&&&&&");
+                       //System.out.println("Exito##&&&////&&&&//&&&&&");
                        ban=false;
                        sali=i;
                        this.start=aux;
@@ -133,6 +134,16 @@ public class Header {
                        this.start=aux;
                        System.out.println("Exito");
                    }else{
+                       if(cad.contains(val1)){
+                           if(cont==0){
+                            ban=false;
+                            this.start=aux;
+                            sali=i;
+                            cont++;
+                           }else{
+                           cont=0;
+                           }
+                       }
                        String cad1=new String();
                        for(int p=1;p<cad.length();p++){
                            cad1+=cad.charAt(p);
@@ -224,7 +235,7 @@ public class Header {
     
     public int FindCode1(int pos,ArrayList array){
     this.code1[0]=(byte)array.get(pos);
-    this.code2[1]=(byte)array.get(++pos);
+    this.code1[1]=(byte)array.get(++pos);
     //System.out.printf("0x%02X",code1[0]);
           //System.out.println("");
     //System.out.printf("0x%02X",code2[1]);
@@ -266,10 +277,136 @@ public class Header {
     return pos;
     }
     
+    /**
+     * 
+     * @return 
+     */
     public int sizePacket(){
         String var=new String();
         var=String.format("%02X",size[0]);
         var=var.concat(String.format("%02X",size[1]));
         return Integer.parseInt(var, 16);
     }
+    
+    /**
+     *
+     * 
+     * 
+     */
+    public void mostrarStart(){
+        for(int i=0;i<start.length;i++){
+        System.out.printf("0x%02X",start[i]);
+        }
+        System.out.println("-*-*-*-*-*-*-*-*-*-*");
+    }
+    
+    /**
+     * 
+     * 
+     */
+    public void mostrarSize(){
+        for(int i=0;i<size.length;i++){
+        System.out.printf("0x%02X",size[i]);
+        }
+        System.out.println("-*-*-*-*-*-*-*-*-*-*");
+    }
+    
+    /**
+     * 
+     * 
+     */
+    public void mostrarHi_zero(){
+        for(int i=0;i<Hi_ze.length;i++){
+        System.out.printf("0x%02X",Hi_ze[i]);
+        }
+        System.out.println("-*-*-*-*-*-*-*-*-*-*");
+    }
+    
+    /**
+     * 
+     * 
+     * 
+     */
+    public void mostrarCrc(){
+        for(int i=0;i<crc.length;i++){
+        System.out.printf("0x%02X",crc[i]);
+        }
+        System.out.println("-*-*-*-*-*-*-*-*-*-*");
+    }
+    /**
+     * 
+     * 
+     * 
+     */
+    public void mostrarLowZero() {
+        for(int i=0;i<low_zer.length;i++){
+        System.out.printf("0x%02X",low_zer[i]);
+        }
+        System.out.println("-*-*-*-*-*-*-*-*-*-*");
+    }
+    
+    /**
+     * 
+     * 
+     */
+    public void mostrarCode1(){
+        for(int i=0;i<code1.length;i++){
+        System.out.printf("0x%02X",code1[i]);
+        }
+        System.out.println("-*-*-*-*-*-*-*-*-*-*");
+    }
+    /**
+     * 
+     * 
+     */
+    
+    public void mostrarConst(){
+        for(int i=0;i<conts1.length;i++){
+        System.out.printf("0x%02X",conts1[i]);
+        }
+        System.out.println("-*-*-*-*-*-*-*-*-*-*");
+    }
+    
+    /**
+     * 
+     * 
+     */
+    public void mostrarCode2(){
+        for(int i=0;i<code2.length;i++){
+        System.out.printf("0x%02X",code2[i]);
+        }
+        System.out.println("-*-*-*-*-*-*-*-*-*-*");
+    }
+    
+    /**
+     * 
+     * 
+    */
+    
+    public int cantSize(){
+       int  sie=0;
+       sie+=start.length+size.length+Hi_ze.length+
+               crc.length+low_zer.length+code1.length+
+                conts1.length+code2.length;
+       return sie;
+    }   
+    
+    /**
+     * 
+     * 
+     */
+    public void printHeader(){
+    mostrarStart();
+    mostrarSize();
+    mostrarHi_zero();
+    mostrarCrc();
+    mostrarLowZero();
+    mostrarCode1();
+    mostrarConst();
+    mostrarCode2();
+    }
+    
+    
+    
+    
 }

@@ -21,6 +21,7 @@ public class MindrayPacket implements Trama{
      */
     private Header enca=new Header();
     private ArrayList<Subtrama> subtramas=new ArrayList();
+    private int tam;
             
     /**
      * Constructor overload
@@ -69,26 +70,50 @@ public class MindrayPacket implements Trama{
                 pos=enca.FindCode1(pos, data);
                 pos=enca.FindConst1(pos, data);
                 pos=enca.FindCode2(pos, data);
+                enca.printHeader();
+                pos++;
+               int tam1_aux=enca.sizePacket();
+               tam=enca.cantSize();
+                do{
+                     System.out.println(tam1_aux+" esto es ta "+tam);
+                    pos=cargarSubTram(data, pos);
+                }while(tam<tam1_aux);
+                tam=0;
                 //la subtrama se debe sacar en cualquier circustancia, pero si 
-                //la trama no tiene el tamaño suficiente la subtrama se cargara con el restane de la subtrama
                 
             }
         return ++pos;
     }
 
     @Override
-    public void cargarSubTram(ArrayList data, int pos) {
+    public int cargarSubTram(ArrayList data, int pos) {
         Subtrama sub=new Subtrama();
-        sub.findstart(pos, data);
-        sub.findSize(pos, data);
-        sub.findEndh(pos, data);
+        pos=sub.findstart(pos, data);
+        pos=sub.findSize(pos, data);
+        pos=sub.findEndh(pos, data);
+        int tama=sub.sizePSubtram();
+        pos=sub.addData(pos, tama, data);
+        tam+=tama+sub.sizeSub();
+        System.out.println(tam);
+        sub.printSub();
+        subtramas.add(sub);
+        return ++pos;
+        //Adicionar la  subtrama
+        /**
         int fin=sub.findtoNewSub(pos, data);
         if(fin!=-1){
         sub.addData(pos, fin, data);
         }
+        **/
     }
     
+    public void mostrarPaqueteMind(){
     
+    
+    
+    
+    
+    }
     
     
 }

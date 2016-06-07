@@ -13,5 +13,5 @@ import java.util.ArrayList;
  */
 public interface  Trama {
     public int clasifydata(ArrayList data, int pos);
-    public void cargarSubTram(ArrayList data,int pos);
+    public int cargarSubTram(ArrayList data,int pos);
 }

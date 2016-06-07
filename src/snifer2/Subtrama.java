@@ -19,7 +19,7 @@ public class Subtrama {
      */
     private ArrayList data=new ArrayList();
     private byte endH;
-    private byte size[];
+    private byte size[]=new byte[2];
     private byte start;
 
     /**
@@ -57,46 +57,136 @@ public class Subtrama {
     public byte getStart() {
         return start;
     }
-
+    
     public void setStart(byte start) {
         this.start = start;
     }
-    
+    /**
+     * 
+     * 
+     * @param pos
+     * @param array
+     * @return 
+     */
     public int findstart(int pos, ArrayList array){
     start=(byte)array.get(pos);
     return ++pos;
     }
-    
+    /**
+     * 
+     * 
+     * @param pos
+     * @param array
+     * @return 
+     */
     public int findSize(int pos,ArrayList array){
     size[0]=(byte)array.get(pos);
     size[1]=(byte)array.get(++pos);
     return ++pos;
     }
-    
+    /**
+     * 
+     * 
+     * @param pos
+     * @param array
+     * @return 
+     */
     public int findEndh(int pos,ArrayList array){    
     endH=(byte)array.get(pos);
     return ++pos;
     }
-    
-    public int findtoNewSub(int pos,ArrayList array){
-        boolean ban=true;
-        int sali=-1;
-        for(int i=pos;i<array.size()&&ban==true;i++){
-            if((int)array.get(i)<10){
-                ban=false;
-                sali=i;
-            }
-        }
-    return sali;
-    }
-    
-    
-    public int addData(int posI,int fin,ArrayList array){
-        for(int j=posI;j<fin;j++){
+    /**
+     * 
+     * 
+     * @param posI
+     * @param cant
+     * @param array
+     * @return 
+     */
+    public int addData(int posI,int cant,ArrayList array){
+        int cont=0;
+        for(int j=posI;j<array.size()&&cont<cant;j++){
                data.add(array.get(j));
+               cont++;
+               posI=j;
         }
-        return fin;
+        return posI;
+    }
+    
+    /**
+     * 
+     * 
+     * 
+     * @return 
+     */
+    public int sizePSubtram(){
+        String var=new String();
+        var=String.format("%02X",size[0]);
+        var=var.concat(String.format("%02X",size[1]));
+        return Integer.parseInt(var, 16);
+    }
+    
+    /**
+     * 
+     * 
+     * 
+     */
+    public void printStart(){
+    System.out.printf("0x%02X",start);
+    System.out.println("--------");
+    }
+    
+    /**
+     * 
+     * 
+     * 
+     */
+    public void printSize(){
+        System.out.printf("0x%02X",size[0]);
+        System.out.printf("0x%02X",size[1]);
+        System.out.println("----------");
+    }
+    
+    /**
+     * 
+     * 
+     * 
+     */
+    public void printEnd(){
+        System.out.printf("0x%02X",endH);
+        System.out.println("-------------");
     }
     
     
+    /**
+     * 
+     * 
+     */
+    public void printData(){
+        for(int j=0;j<data.size();j++){
+           System.out.printf("0x%02X",data.get(j));
+        }
+        System.out.println("--------------");
+    }
+    
+    /**
+     * 
+     * 
+     */
+    public void printSub(){
+        printStart();
+        printSize();
+        printEnd();
+        printData();
+    }
+
+    /**
+     * 
+     * 
+     */
+      public int sizeSub(){
+      return size.length+2;
+      }
+    
+
 }
