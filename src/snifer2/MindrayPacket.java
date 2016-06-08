@@ -48,14 +48,17 @@ public class MindrayPacket implements Trama{
     
       
     /**
-     * this is metod o clasification the diferent datas
+     * this is metod of clasification the diferent datas
      * of the packet.
      * @param dat are the datas from trama.
      * @return null.
      */
     
     @Override
-    public int clasifydata(ArrayList data,int post) {
+    public int clasifydata(ArrayList data, int post) {
+        System.out.println("valor de data :");
+        System.out.printf("0x%02X",data.get(post));
+        System.out.println("\n esto es pos: "+post);
         int pos=enca.FindStart(data,post);
         if(pos!=-1){
             pos++;
@@ -82,7 +85,7 @@ public class MindrayPacket implements Trama{
                 //la subtrama se debe sacar en cualquier circustancia, pero si 
                 
             }
-        return ++pos;
+        return pos;
     }
 
     @Override

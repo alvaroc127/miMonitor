@@ -90,7 +90,6 @@ public class Header {
     
     public int FindStart(ArrayList array,int post){
         String val="15015700";
-        String val1="151500";
         String cad=new String();
         byte aux[]=new byte[6];
         boolean ban=true;
@@ -134,16 +133,6 @@ public class Header {
                        this.start=aux;
                        System.out.println("Exito");
                    }else{
-                       if(cad.contains(val1)){
-                           if(cont==0){
-                            ban=false;
-                            this.start=aux;
-                            sali=i;
-                            cont++;
-                           }else{
-                           cont=0;
-                           }
-                       }
                        String cad1=new String();
                        for(int p=1;p<cad.length();p++){
                            cad1+=cad.charAt(p);

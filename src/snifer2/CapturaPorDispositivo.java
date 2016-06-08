@@ -7,96 +7,55 @@ package snifer2;
 
 import java.util.ArrayList;
 import java.util.Date;
-import org.jnetpcap.*;
+import org.jnetpcap.Pcap;
+import org.jnetpcap.PcapIf;
 import org.jnetpcap.nio.JBuffer;
-import org.jnetpcap.packet.JPacket;
-import org.jnetpcap.packet.JPacketHandler;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
 import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.tcpip.Tcp;
 import org.jnetpcap.protocol.tcpip.Udp;
 
-
 /**
- *
+ * This class implements Runnable interface for proced capture networck of a dispositiv
  * @author ELECTRONICA
+ * @created 08/06/2016
+ * @version 4.0
  */
-public class CapturaRed  {
-    private ArrayList<PcapIf> dispositivos=new ArrayList<PcapIf>();
-    private StringBuilder error=new StringBuilder();
-    private ArrayList packetes=new ArrayList();
-    private PcapIf dispositivo=null;
-    private int ban,tamn;
-    private MindrayPacket MP=new MindrayPacket();
-    private   boolean band=true;
+public class CapturaPorDispositivo implements Runnable{
+     private MindrayPacket MP=new MindrayPacket();
+     private   boolean band=true;
      private boolean ban2=true;
      private int []vectorGu=new int[2];
-    private ArrayList<Trama> packets=new ArrayList();
-    
-    
-    
-    /**
-     * 
-     */
-    public void obteneDispo(){
-    ban=Pcap.findAllDevs(dispositivos, error);
-        if(ban==Pcap.NOT_OK || dispositivos.isEmpty()){
-            System.out.println("error leyendo los dispos");
-            System.out.println(error.toString());
-        }
+     private ArrayList<Trama> packets=new ArrayList();
+     private PcapIf dispositivo=null;
+     private StringBuilder error=new StringBuilder();
+     private ArrayList packetes=new ArrayList();
+     private int tamn;
+
+    public CapturaPorDispositivo() {
     }
     
-    /**
-     * 
-     */
-    public void listarDispositivos(){
-        String descripcion=null;
-        for(int j=0;j<dispositivos.size();j++){
-            dispositivo=dispositivos.get(j);
-            descripcion=dispositivo.getDescription();
-            if(descripcion !=null){
-                System.out.println("Nombre del dispositivo :"+dispositivo.getName());
-                System.out.println("No :"+j);
-                System.out.println("Descripcion del Dispositivo :"+descripcion);
-            }
-            dispositivosPorEnlace(j);
-        }
-        capturarDatosDeRed(dispositivos.get(1));
+    
+    
+    public CapturaPorDispositivo(PcapIf dispo){
+    this.dispositivo=dispo;
     }
-        
-    /**
-     * 
-     * @param indice 
-     */
-       public void dispositivosPorEnlace(int indice){
-           ArrayList<PcapAddr> dispo=(ArrayList<PcapAddr>) dispositivos.get(indice).getAddresses();
-           PcapAddr dis=null;
-           for(int j=0;j<dispo.size();j++){
-           dis=dispo.get(j);
-            System.out.println("Direccion IP: "+dis.getAddr().toString());
-            System.out.println("Mascara de sub red: "+dis.getNetmask().toString());
-            }  
-       }
-       
-     /**
-      * 
-      * 
-      * @param dispo 
-      */ 
-       public void capturarDatosDeRed(PcapIf dispo){
+     
+     
+      public void capturarDatosDeRed(){
            int alcanzeCaptura= 64*1024;
            int bandera =Pcap.MODE_PROMISCUOUS;
            int tiemposalida= 10*1000;
        
           
-           Pcap pcap=Pcap.openLive(dispo.getName(),alcanzeCaptura, bandera, tiemposalida, error);
+           Pcap pcap=Pcap.openLive(dispositivo.getName(),alcanzeCaptura, bandera, tiemposalida, error);
            if(pcap==null){
                System.out.println("Error abriendo dispositivo de captura"+
                        error.toString());
            }
            System.out.println("datos optenidos del dispositivo");
-           System.out.println("des: "+dispo.getDescription());
+           System.out.println("des: "+dispositivo.getDescription());
            PcapPacketHandler<String> jpacketHandler=new PcapPacketHandler<String>() {;
                 Tcp TCP=new Tcp();
                 Ip4 ip=new Ip4();
@@ -178,13 +137,10 @@ public class CapturaRed  {
            pcap.loop(Pcap.LOOP_INFINITE, jpacketHandler, "useiro Yo");
            pcap.close();     
      }
-       
-     /**
-      * 
-      * @param array
-      * @return 
-      */
-    public int contarPacket(ArrayList array) {
+     
+     
+      
+      public int contarPacket(ArrayList array) {
         String val="15015700";
         String cad=new String();
         int sali=0,valor;
@@ -333,5 +289,10 @@ public class CapturaRed  {
         }
     return packets;
     }
-    
+     
+     
+    @Override
+    public void run() {
+        capturarDatosDeRed();
+    }
 }
