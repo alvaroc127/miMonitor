@@ -57,22 +57,19 @@ public class CapturaPorDispositivo implements Runnable{
            System.out.println("datos optenidos del dispositivo");
            System.out.println("des: "+dispositivo.getDescription());
            PcapPacketHandler<String> jpacketHandler=new PcapPacketHandler<String>() {;
-                Tcp TCP=new Tcp();
-                Ip4 ip=new Ip4();
-                Udp UDP=new Udp();
-        
-               
+           Tcp TCP=new Tcp();
                 
-                
-              
             @Override
             public void nextPacket(PcapPacket paqute, String user) {
-                ArrayList packetDat=new ArrayList();
-                 int auxiliar[]=new int[2];
-                
+                     ArrayList packetDat=new ArrayList();
+                    int auxiliar[]=new int[2];
+                    int tama;
                     if(paqute.hasHeader(TCP.ID)){
-                        int tama=paqute.size();
+                        tama=paqute.size();
                        paqute.getHeader(TCP);
+                       if(TCP.getPayloadLength()<9){
+                            Thread.yield();
+                        }
                        JBuffer buffer= paqute;
                        byte array[]=buffer.getByteArray(0, tama);
                        System.out.println("fuente :"+TCP.source());
@@ -80,7 +77,7 @@ public class CapturaPorDispositivo implements Runnable{
                        System.out.println("Paquetes recibido el: "+new Date(paqute.getCaptureHeader().timestampInMillis()));
                        System.out.println("el tamaño del paqute capturado  :"+paqute.getCaptureHeader().caplen());
                        System.out.println("el tamño del paquete original :"+paqute.getCaptureHeader().wirelen());
-                       System.out.println(paqute);
+                       //System.out.println(paqute);
                        for(int i=0;i<array.length;i++){
                            packetDat.add(array[i]);
                        }
@@ -108,14 +105,14 @@ public class CapturaPorDispositivo implements Runnable{
                                vectorGu=auxiliar;
                                for(int i=0;i<packetDat.size();i++){
                                   ((ArrayList)packetes.get(0)).add(packetDat.get(i));
-                                   System.out.printf("0x%02X",packetDat.get(i));
+                                  // System.out.printf("0x%02X",packetDat.get(i));
                                }
-                               System.out.println("tamaño :"+packetDat.size());
+                               //System.out.println("tamaño :"+packetDat.size());
                                packetDat=(ArrayList)packetes.get(0);
-                               System.out.println("tamaño :"+packetDat.size());
+                               //System.out.println("tamaño :"+packetDat.size());
                                packetes.remove(0);                            
-                               System.out.println("tamaño almacenado de paquetes :"+packetes.size());
-                               System.out.println("Sepaso a crear");
+                               //System.out.println("tamaño almacenado de paquetes :"+packetes.size());
+                              // System.out.println("Sepaso a crear");
                                crearPacket(tamn,packetDat);
                                 }
                            }
@@ -131,7 +128,9 @@ public class CapturaPorDispositivo implements Runnable{
                        System.out.println("########################");
                        //System.out.println(user);
                        //System.out.println(paqute.toHexdump());
-                   }
+                   }else{
+                    Thread.yield();
+                    }
                 }
             };
            pcap.loop(Pcap.LOOP_INFINITE, jpacketHandler, "useiro Yo");
@@ -279,18 +278,36 @@ public class CapturaPorDispositivo implements Runnable{
      * @param datas
      * @return 
      */
-    public ArrayList<Trama> crearPacket(int numPackets,ArrayList datas){
+    public void crearPacket(int numPackets,ArrayList datas){
     int pos=0;
     for(int i=0;i<numPackets;i++){
         MindrayPacket packt=new MindrayPacket();
         pos=packt.clasifydata(datas,pos);
-        packets.add(packt);
-        System.out.println("cabezas creadas "+packets.size());
+         synchronized(packets){
+            packets.add(packt);
+            packets.notify();
+            System.out.println("cabezas creadas "+packets.size());
+            }
         }
-    return packets;
     }
      
      
+    public MindrayPacket returnPack(){
+        if(packets.isEmpty()){
+            synchronized(packets){
+             try{
+                packets.wait();
+                }catch(InterruptedException ie){
+                ie.printStackTrace();
+                }
+            }
+        }
+        MindrayPacket mp1=(MindrayPacket)packets.get(0);
+        packets.remove(0);
+        return mp1;
+    }
+    
+    
     @Override
     public void run() {
         capturarDatosDeRed();

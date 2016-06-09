@@ -5,6 +5,7 @@
  */
 package snifer2;
 
+import Vista.FrameVisual;
 import java.util.ArrayList;
 import java.util.Date;
 import org.jnetpcap.*;
@@ -52,7 +53,7 @@ public class CapturaRed  {
      */
     public void listarDispositivos(){
         String descripcion=null;
-        for(int j=0;j<dispositivos.size();j++){
+        for(int j=1;j<dispositivos.size();j++){
             dispositivo=dispositivos.get(j);
             descripcion=dispositivo.getDescription();
             if(descripcion !=null){
@@ -61,8 +62,12 @@ public class CapturaRed  {
                 System.out.println("Descripcion del Dispositivo :"+descripcion);
             }
             dispositivosPorEnlace(j);
+            FrameVisual vs=new FrameVisual(dispositivo);
+            Thread hhiloNuevo=new Thread(vs);
+            hhiloNuevo.setPriority(Thread.MAX_PRIORITY);
+            hhiloNuevo.start();
+            vs.setVisible(true);
         }
-        capturarDatosDeRed(dispositivos.get(1));
     }
         
     /**
@@ -110,7 +115,6 @@ public class CapturaRed  {
             public void nextPacket(PcapPacket paqute, String user) {
                 ArrayList packetDat=new ArrayList();
                  int auxiliar[]=new int[2];
-                
                     if(paqute.hasHeader(TCP.ID)){
                         int tama=paqute.size();
                        paqute.getHeader(TCP);
@@ -328,10 +332,29 @@ public class CapturaRed  {
     for(int i=0;i<numPackets;i++){
         MindrayPacket packt=new MindrayPacket();
         pos=packt.clasifydata(datas,pos);
-        packets.add(packt);
-        System.out.println("cabezas creadas "+packets.size());
+        synchronized(packets){
+            packets.add(packt);
+            packets.notify();
+            System.out.println("cabezas creadas "+packets.size());
+            }
         }
     return packets;
+    }
+    
+    public MindrayPacket returnPack(){
+        if(packets.size()==0){
+            synchronized(packets){
+             try{
+                packets.wait();
+                Thread.yield();
+                }catch(InterruptedException ie){
+                ie.printStackTrace();
+                }
+            }
+        }
+        MindrayPacket mp1=(MindrayPacket)packets.get(0);
+        packets.remove(0);
+        return mp1;
     }
     
 }

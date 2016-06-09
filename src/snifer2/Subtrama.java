@@ -113,6 +113,22 @@ public class Subtrama {
         return posI;
     }
     
+    
+    /**
+     * 
+     */
+    public String joinheader(){
+        String cad=new String();
+        int a=Byte.toUnsignedInt(start);
+        cad=cad.concat(String.valueOf(a));
+        a=Byte.toUnsignedInt(size[0]);
+        cad=cad.concat(String.valueOf(a));
+        a=Byte.toUnsignedInt(size[1]);
+        cad=cad.concat(String.valueOf(a));
+        a=Byte.toUnsignedInt(endH);
+        cad=cad.concat(String.valueOf(a));
+        return cad;
+    }
     /**
      * 
      * 

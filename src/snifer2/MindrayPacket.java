@@ -56,9 +56,6 @@ public class MindrayPacket implements Trama{
     
     @Override
     public int clasifydata(ArrayList data, int post) {
-        System.out.println("valor de data :");
-        System.out.printf("0x%02X",data.get(post));
-        System.out.println("\n esto es pos: "+post);
         int pos=enca.FindStart(data,post);
         if(pos!=-1){
             pos++;
@@ -73,7 +70,6 @@ public class MindrayPacket implements Trama{
                 pos=enca.FindCode1(pos, data);
                 pos=enca.FindConst1(pos, data);
                 pos=enca.FindCode2(pos, data);
-                enca.printHeader();
                 pos++;
                int tam1_aux=enca.sizePacket();
                tam=enca.cantSize();
@@ -98,7 +94,6 @@ public class MindrayPacket implements Trama{
         pos=sub.addData(pos, tama, data);
         tam+=tama+sub.sizeSub();
         System.out.println(tam);
-        sub.printSub();
         subtramas.add(sub);
         return ++pos;
         //Adicionar la  subtrama
