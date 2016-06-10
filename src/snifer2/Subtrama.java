@@ -31,7 +31,7 @@ public class Subtrama {
     public ArrayList getData() {
         return data;
     }
-
+    
     public void setData(ArrayList data) {
         this.data = data;
     }
@@ -119,15 +119,11 @@ public class Subtrama {
      */
     public String joinheader(){
         String cad=new String();
-        int a=Byte.toUnsignedInt(start);
-        cad=cad.concat(String.valueOf(a));
-        a=Byte.toUnsignedInt(size[0]);
-        cad=cad.concat(String.valueOf(a));
-        a=Byte.toUnsignedInt(size[1]);
-        cad=cad.concat(String.valueOf(a));
-        a=Byte.toUnsignedInt(endH);
-        cad=cad.concat(String.valueOf(a));
-        return cad;
+        cad=String.format("%01X", start);
+        cad=cad.concat(String.format("%01X",size[0]));
+        cad=cad.concat(String.format("%01X",size[1]));
+        cad=cad.concat(String.format("%01X",endH));
+        return String.valueOf(Integer.parseInt(cad, 16));
     }
     /**
      * 

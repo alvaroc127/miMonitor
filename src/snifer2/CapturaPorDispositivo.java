@@ -118,7 +118,7 @@ public class CapturaPorDispositivo implements Runnable{
                            }
                        }else{
                            if(band==true&&tama!=0){
-                               System.out.println("SE PASO A CREAR Paquetes");
+                               //System.out.println("SE PASO A CREAR Paquetes");
                                crearPacket(tama, packetDat);
                            }
                        }
@@ -286,7 +286,7 @@ public class CapturaPorDispositivo implements Runnable{
          synchronized(packets){
             packets.add(packt);
             packets.notify();
-            System.out.println("cabezas creadas "+packets.size());
+            //System.out.println("cabezas creadas "+packets.size());
             }
         }
     }

@@ -4,18 +4,12 @@
  * and open the template in the editor.
  */
 package Vista;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GraphicsConfiguration;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.HeadlessException;
-import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import snifer2.CapturaPorDispositivo;
 
+
+import java.awt.GridLayout;
+import java.util.ArrayList;
+import snifer2.CapturaPorDispositivo;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import org.jnetpcap.PcapIf;
 import snifer2.MindrayPacket;
 
@@ -25,10 +19,11 @@ import snifer2.MindrayPacket;
  */
 public class FrameVisual extends JFrame implements Runnable{
     private final static int COLUMNAS =1;
-    private final static int FILAS=3;
+    private final static int FILAS=9;
     private CapturaPorDispositivo cpd;
     private Thread hiloDispo;
     private ArrayList<PanelVisual> panels=new ArrayList();
+    
 
 
     public FrameVisual(PcapIf dispo){
@@ -40,21 +35,24 @@ public class FrameVisual extends JFrame implements Runnable{
        getContentPane().setLayout(new GridLayout(FILAS, COLUMNAS));
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         for(int i=0;i<FILAS;i++){
-          PanelVisual pa=new PanelVisual();
+          PanelVisual pa=new PanelVisual(i);
           panels.add(pa);
           getContentPane().add(pa);
         }
     }
     
     public void ClasifiData(MindrayPacket mp){
-        final String h1="1101";
-        final String h2="2101";
-        final String h3="7101";
-        final String h4="26081";
-        final String h5="19101";
-        final String h6="31085";
-        final String h7="2085";
+        final String h1="4353";
+        final String h2="8449";
+        final String h3="28929";
+        final String h4="1705985";
+        final String h5="102657";
+        final String h6="2033669";
+        final String h7="2099205";
+        final String h8="475251";
+        final String h9="73746";
         for(int i=0;i<mp.getSubtramas().size();i++){
+            System.out.println("\n valor subtrama :"+mp.getSubtramas().get(i).joinheader());
             switch(mp.getSubtramas().get(i).joinheader()){
                 case(h1):
                     panels.get(0).loadGrafic(mp.getSubtramas().get(i).getData());
@@ -85,7 +83,18 @@ public class FrameVisual extends JFrame implements Runnable{
                     
                 case(h7):
                     panels.get(6).loadGrafic(mp.getSubtramas().get(i).getData());    
-                break;  
+                break; 
+                    
+                case(h8):
+                    panels.get(7).loadGrafic(mp.getSubtramas().get(i).getData());    
+                    break;
+                    
+                  case(h9):
+                    panels.get(8).loadGrafic(mp.getSubtramas().get(i).getData());      
+                   break;
+                      
+                   default: 
+                    break;
             }
             
         }

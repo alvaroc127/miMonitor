@@ -153,7 +153,7 @@ public class CapturaRed  {
                                vectorGu=auxiliar;
                                for(int i=0;i<packetDat.size();i++){
                                   ((ArrayList)packetes.get(0)).add(packetDat.get(i));
-                                   System.out.printf("0x%02X",packetDat.get(i));
+                                   //System.out.printf("0x%02X",packetDat.get(i));
                                }
                                System.out.println("tamaño :"+packetDat.size());
                                packetDat=(ArrayList)packetes.get(0);
