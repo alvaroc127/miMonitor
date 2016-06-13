@@ -24,16 +24,24 @@ import org.jnetpcap.protocol.tcpip.Udp;
  * @author ELECTRONICA
  */
 public class CapturaRed  {
-    private ArrayList<PcapIf> dispositivos=new ArrayList<PcapIf>();
+    private ArrayList<PcapIf> dispositivos;
     private StringBuilder error=new StringBuilder();
-    private ArrayList packetes=new ArrayList();
+    private ArrayList packetes;
     private PcapIf dispositivo=null;
     private int ban,tamn;
-    private MindrayPacket MP=new MindrayPacket();
+    private MindrayPacket MP;
     private   boolean band=true;
      private boolean ban2=true;
-     private int []vectorGu=new int[2];
-    private ArrayList<Trama> packets=new ArrayList();
+     private int []vectorGu;
+    private ArrayList<Trama> packets;
+
+    public CapturaRed() {
+        dispositivos=new ArrayList<PcapIf>();
+        packetes=new ArrayList();
+        MP=new MindrayPacket();
+        vectorGu=new int[2];
+        packets=new ArrayList();
+    }
     
     
     

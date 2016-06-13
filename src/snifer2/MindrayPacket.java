@@ -19,14 +19,16 @@ public class MindrayPacket implements Trama{
     /**
      * Atribute of class mindrayPacket
      */
-    private Header enca=new Header();
-    private ArrayList<Subtrama> subtramas=new ArrayList();
+    private Header enca;
+    private ArrayList<Subtrama> subtramas;
     private int tam;
             
     /**
      * Constructor overload
      */
     public MindrayPacket() {
+        enca=new Header();
+        subtramas=new ArrayList();
     }
 
     public Header getEnca() {

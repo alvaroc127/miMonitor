@@ -23,14 +23,14 @@ import org.jnetpcap.protocol.tcpip.Udp;
  * @version 4.0
  */
 public class CapturaPorDispositivo implements Runnable{
-     private MindrayPacket MP=new MindrayPacket();
+     private MindrayPacket MP;
      private   boolean band=true;
      private boolean ban2=true;
-     private int []vectorGu=new int[2];
-     private ArrayList<Trama> packets=new ArrayList();
+     private int []vectorGu;
+     private ArrayList<Trama> packets;
      private PcapIf dispositivo=null;
      private StringBuilder error=new StringBuilder();
-     private ArrayList packetes=new ArrayList();
+     private ArrayList packetes;
      private int tamn;
 
     public CapturaPorDispositivo() {
@@ -40,6 +40,10 @@ public class CapturaPorDispositivo implements Runnable{
     
     public CapturaPorDispositivo(PcapIf dispo){
     this.dispositivo=dispo;
+    MP=new MindrayPacket();
+    vectorGu=new int[2];
+    packets=new ArrayList();
+    packetes=new ArrayList();
     }
      
      

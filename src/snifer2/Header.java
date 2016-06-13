@@ -17,20 +17,28 @@ public class Header {
     /**
      * Atribute of header
      */
-    private byte[] start=new byte[6];
-    private byte[] size=new byte[2];
-    private byte[] Hi_ze=new byte[8];
-    private byte[] crc=new byte[2];
-    private byte[] low_zer=new byte[6];
-    private byte[] code1=new byte[2];
-    private byte[] conts1=new byte[3];
-    private byte[] code2=new byte[2];
+    private byte[] start;
+    private byte[] size;
+    private byte[] Hi_ze;
+    private byte[] crc;
+    private byte[] low_zer;
+    private byte[] code1;
+    private byte[] conts1;
+    private byte[] code2;
 
     
     /**
      * constructor of header overload
      */
     public Header() {
+        start=new byte[6];
+        size=new byte[2];
+        Hi_ze=new byte[8];
+        crc=new byte[2];
+        low_zer=new byte[6];
+        code1=new byte[2];
+        conts1=new byte[3];
+        code2=new byte[2];
     }
     
     public byte[] getHi_ze() {
