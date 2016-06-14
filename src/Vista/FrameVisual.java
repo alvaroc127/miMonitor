@@ -53,6 +53,7 @@ public class FrameVisual extends JFrame implements Runnable{
         final String h7="2099205";
         final String h8="475251";
         final String h9="73746";
+        if(mp!=null){
         for(int i=0;i<mp.getSubtramas().size();i++){
             System.out.println("\n valor subtrama :"+mp.getSubtramas().get(i).joinheader());
             switch(mp.getSubtramas().get(i).joinheader()){
@@ -101,6 +102,7 @@ public class FrameVisual extends JFrame implements Runnable{
             
         }
     }
+ }
     
     
     

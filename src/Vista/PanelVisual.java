@@ -63,7 +63,7 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
        switch(this.val){
            
         case(0):
-            plot.getRangeAxis().setRange(100,220);
+            plot.getRangeAxis().setRange(10,220);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.GREEN);
             add(panelGraf, BorderLayout.CENTER);
         break;
