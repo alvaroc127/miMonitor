@@ -199,6 +199,12 @@ public class Subtrama {
       public int sizeSub(){
       return size.length+2;
       }
+      
+      /**
+       * 
+       * 
+       */
+      
     
 
 }

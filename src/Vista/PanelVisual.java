@@ -10,8 +10,8 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.Timer;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -20,11 +20,12 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.DynamicTimeSeriesCollection;
 import org.jfree.data.time.Millisecond;
 
+
 /**
  *
  * @author ELECTRONICA
  */
-public class PanelVisual extends JPanel implements ActionListener{
+public class PanelVisual extends JPanel implements ActionListener,Runnable{
     private ArrayList grafica=new ArrayList();
     private DynamicTimeSeriesCollection contSer;
     private JFreeChart gaficaTiempo;
@@ -35,15 +36,14 @@ public class PanelVisual extends JPanel implements ActionListener{
     private int mes;
     private int anio;
     private int indiceSerie;
-    private Timer tempo;
+    private Timer tiempo;
     private String nombreDeLaSerie;
     private int val;
                 
 
     public PanelVisual(int val) {
         this.val=val;
-        tempo=new Timer(4, this);
-       contSer=new DynamicTimeSeriesCollection(getCantidadDeSeries(),getCantidadPorSerie(),enMiSecond());
+       contSer=new DynamicTimeSeriesCollection(getCantidadDeSeries(),getCantidadPorSerie());
        contSer.setTimeBase(new Millisecond(0, segundo, minuto, hora, dia=1,mes=1,anio=2016));
        contSer.addSeries(valoresDeLaSerie(), indiceSerie=0, nombreDeLaSerie="SEÑAL");
        gaficaTiempo=ChartFactory.createTimeSeriesChart(                                 getTitulo(),
@@ -63,26 +63,26 @@ public class PanelVisual extends JPanel implements ActionListener{
        switch(this.val){
            
         case(0):
-            plot.getRangeAxis().setRange(20,220);
+            plot.getRangeAxis().setRange(100,220);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.GREEN);
             add(panelGraf, BorderLayout.CENTER);
         break;
            
         case(1):
-            plot.getRangeAxis().setRange(20,220);
+            plot.getRangeAxis().setRange(100,200);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.GREEN);
             add(panelGraf, BorderLayout.CENTER);
         break;
             
         case(2):
-            plot.getRangeAxis().setRange(20,220);
+            plot.getRangeAxis().setRange(115,135);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.GREEN);
             add(panelGraf, BorderLayout.CENTER);
         break;
             
             
         case(3):
-            plot.getRangeAxis().setRange(20,220);
+            plot.getRangeAxis().setRange(90,190);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.yellow);
             add(panelGraf, BorderLayout.WEST);
         break;
@@ -95,13 +95,13 @@ public class PanelVisual extends JPanel implements ActionListener{
            
             
         case(5):
-            plot.getRangeAxis().setRange(20,220);
-            plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.YELLOW);
+            plot.getRangeAxis().setRange(0,220);
+            plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.RED);
             add(panelGraf, BorderLayout.WEST);
         break;
             
         case(6):
-            plot.getRangeAxis().setRange(10,35);
+            plot.getRangeAxis().setRange(0,35);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.YELLOW);
                add(panelGraf, BorderLayout.WEST); 
         break;
@@ -118,7 +118,6 @@ public class PanelVisual extends JPanel implements ActionListener{
            add(panelGraf, BorderLayout.WEST);
        break;
        }
-        tempo.start();
     }
     
     
@@ -234,18 +233,15 @@ public class PanelVisual extends JPanel implements ActionListener{
         return 1;
     }
     
-    /**
-     * 
-     * @param e 
-     */
+    
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        switch(this.val){
-           
+        switch(this.val){ 
         case(0):
                if(grafica.isEmpty()==false){
              int resul;
-            for(int i=0;i<grafica.size()/10;i++){
+             for(int i=0;i<grafica.size()/10;i++){
                resul=getElemnGrafic();
              contSer.advanceTime();//avansa el tiempo     
             contSer.appendData(new float[]{resul});
@@ -333,13 +329,13 @@ public class PanelVisual extends JPanel implements ActionListener{
             
         case(5):
                if(grafica.isEmpty()==false){
-             int resul;
+             int resul=0;
             for(int i=0;i<grafica.size()/5;i++){
-               resul=getElemnGrafic();
+               resul=getElemnGrafic()+getElemnGrafic();
              contSer.advanceTime();//avansa el tiempo     
             contSer.appendData(new float[]{resul});
                 }
-              resul=getElemnGrafic();
+              resul=getElemnGrafic()+getElemnGrafic();
              contSer.advanceTime();//avansa el tiempo     
             contSer.appendData(new float[]{resul});     
             }else{
@@ -352,13 +348,14 @@ public class PanelVisual extends JPanel implements ActionListener{
             
         case(6):
                if(grafica.isEmpty()==false){
-             int resul;
+             int resul=0;
             for(int i=0;i<grafica.size()/5;i++){
-               resul=getElemnGrafic();
+               resul=getElemnGrafic()+getElemnGrafic();
              contSer.advanceTime();//avansa el tiempo     
             contSer.appendData(new float[]{resul});
+           
                 }
-              resul=getElemnGrafic();
+              resul=getElemnGrafic()+getElemnGrafic();
              contSer.advanceTime();//avansa el tiempo     
             contSer.appendData(new float[]{resul});     
             }else{
@@ -403,7 +400,13 @@ public class PanelVisual extends JPanel implements ActionListener{
             Thread.yield();
         }  
        break;
-       }   
+       }
+        
     }
-    
+
+    @Override
+    public void run() {
+        tiempo=new Timer(30,this);
+        tiempo.start();
+    }
 }

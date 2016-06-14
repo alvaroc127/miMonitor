@@ -19,7 +19,7 @@ import snifer2.MindrayPacket;
  */
 public class FrameVisual extends JFrame implements Runnable{
     private final static int COLUMNAS =1;
-    private final static int FILAS=9;
+    private final static int FILAS=7;
     private CapturaPorDispositivo cpd;
     private Thread hiloDispo;
     private ArrayList<PanelVisual> panels=new ArrayList();
@@ -36,6 +36,8 @@ public class FrameVisual extends JFrame implements Runnable{
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         for(int i=0;i<FILAS;i++){
           PanelVisual pa=new PanelVisual(i);
+          Thread hiloP=new Thread(pa);
+          hiloP.start();
           panels.add(pa);
           getContentPane().add(pa);
         }

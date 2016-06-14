@@ -88,14 +88,33 @@ public class MindrayPacket implements Trama{
 
     @Override
     public int cargarSubTram(ArrayList data, int pos) {
+        final String h6="2033669";
+        final String h7="2099205";
         Subtrama sub=new Subtrama();
         pos=sub.findstart(pos, data);
         pos=sub.findSize(pos, data);
         pos=sub.findEndh(pos, data);
         int tama=sub.sizePSubtram();
-        pos=sub.addData(pos, tama, data);
-        tam+=tama+sub.sizeSub();
-        System.out.println(tam);
+        //SI cabeza es ECG6 O ECG 7 duplicar la cantidad quelee
+        switch(sub.joinheader()){
+            
+        case(h6):
+            pos=sub.addData(pos, tama*2, data);
+            tam+=(tama*2)+sub.sizeSub();
+            break;
+            
+        case(h7):
+            pos=sub.addData(pos, tama*2, data);
+                tam+=(tama*2)+sub.sizeSub();
+             break;
+                
+           
+        default:
+            pos=sub.addData(pos, tama, data);
+               tam+=tama+sub.sizeSub(); 
+            break;
+        }
+        System.out.println("valor de  "+tam);
         subtramas.add(sub);
         return ++pos;
         //Adicionar la  subtrama
@@ -107,13 +126,7 @@ public class MindrayPacket implements Trama{
         **/
     }
     
-    public void mostrarPaqueteMind(){
-    
-    
-    
-    
-    
-    }
+   
     
     
 }

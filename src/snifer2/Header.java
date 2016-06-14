@@ -104,6 +104,12 @@ public class Header {
         int sali=-1,pos=0,valor,cont=0;
         for(int i=post;i<array.size()&&ban==true;i++){
             valor=Byte.toUnsignedInt((byte)array.get(i));
+            if(pos==6){
+                    pos=pos-1;
+                       for(int a=0;a+1<aux.length;a++){
+                           aux[a]=aux[a+1];
+                            }
+            }
             aux[pos]= (byte)array.get(i);
             pos++;
             if(valor>9){

@@ -10,6 +10,7 @@ import java.util.Date;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
 import org.jnetpcap.nio.JBuffer;
+import org.jnetpcap.packet.Payload;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
 import org.jnetpcap.protocol.network.Ip4;
@@ -62,6 +63,7 @@ public class CapturaPorDispositivo implements Runnable{
            System.out.println("des: "+dispositivo.getDescription());
            PcapPacketHandler<String> jpacketHandler=new PcapPacketHandler<String>() {;
            Tcp TCP=new Tcp();
+               Payload payl=new Payload();
                 
             @Override
             public void nextPacket(PcapPacket paqute, String user) {
@@ -74,8 +76,10 @@ public class CapturaPorDispositivo implements Runnable{
                        if(TCP.getPayloadLength()<9){
                             Thread.yield();
                         }
-                       JBuffer buffer= paqute;
-                       byte array[]=buffer.getByteArray(0, tama);
+                       //JBuffer buffer= paqute;
+                       if(TCP.getPayloadLength()!=0){
+                       byte array[]=TCP.getPayload();
+                       
                        System.out.println("fuente :"+TCP.source());
                        System.out.println("Destinio :"+TCP.destination());
                        System.out.println("Paquetes recibido el: "+new Date(paqute.getCaptureHeader().timestampInMillis()));
@@ -136,6 +140,7 @@ public class CapturaPorDispositivo implements Runnable{
                     Thread.yield();
                     }
                 }
+            }
             };
            pcap.loop(Pcap.LOOP_INFINITE, jpacketHandler, "useiro Yo");
            pcap.close();     
