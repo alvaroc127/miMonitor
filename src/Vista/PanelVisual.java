@@ -69,7 +69,7 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
         break;
            
         case(1):
-            plot.getRangeAxis().setRange(100,200);
+            plot.getRangeAxis().setRange(10,200);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.GREEN);
             add(panelGraf, BorderLayout.CENTER);
         break;
@@ -223,7 +223,7 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
      * @return 
      */
     public int getCantidadPorSerie() {
-        return 700; 
+        return 600; 
     }
     /**
      * 
@@ -293,16 +293,16 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
         case(3):
                if(grafica.isEmpty()==false){
              int resul;
-            for(int i=0;i<grafica.size()/20;i++){
+                for(int i=0;i<grafica.size()/10;i++){
                resul=getElemnGrafic();
              contSer.advanceTime();//avansa el tiempo     
              contSer.appendData(new float[]{resul});
                 }
+         
               resul=getElemnGrafic();
              contSer.advanceTime();//avansa el tiempo     
              contSer.appendData(new float[]{resul});     
             }else{
-            System.err.println("NOhay3");
             Thread.yield();
         }
             
@@ -321,7 +321,6 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
              contSer.advanceTime();//avansa el tiempo     
              contSer.appendData(new float[]{resul});     
             }else{
-            System.err.println("NOhay4");
             Thread.yield();
             }  
         break;
@@ -339,7 +338,6 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
              contSer.advanceTime();//avansa el tiempo     
             contSer.appendData(new float[]{resul});     
             }else{
-            System.err.println("NOhay5");
             Thread.yield();
         }
            
@@ -359,7 +357,6 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
              contSer.advanceTime();//avansa el tiempo     
             contSer.appendData(new float[]{resul});     
             }else{
-            System.err.println("NOhay6");
             Thread.yield();
         }
             
@@ -378,7 +375,6 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
              contSer.advanceTime();//avansa el tiempo     
             contSer.appendData(new float[]{resul});     
             }else{
-            System.err.println("NOhay7");
             Thread.yield();
         }
             
@@ -396,7 +392,6 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
              contSer.advanceTime();//avansa el tiempo     
             contSer.appendData(new float[]{resul});     
             }else{
-            System.err.println("NOhay8");
             Thread.yield();
         }  
        break;
@@ -406,7 +401,7 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
 
     @Override
     public void run() {
-        tiempo=new Timer(30,this);
+        tiempo=new Timer(4,this);
         tiempo.start();
     }
 }

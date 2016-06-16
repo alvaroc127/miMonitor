@@ -9,13 +9,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
-import org.jnetpcap.nio.JBuffer;
 import org.jnetpcap.packet.Payload;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
-import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.tcpip.Tcp;
-import org.jnetpcap.protocol.tcpip.Udp;
 
 /**
  * This class implements Runnable interface for proced capture networck of a dispositiv
@@ -35,6 +32,7 @@ public class CapturaPorDispositivo implements Runnable{
      private int tamn;
 
     public CapturaPorDispositivo() {
+        
     }
     
     
@@ -63,7 +61,7 @@ public class CapturaPorDispositivo implements Runnable{
            System.out.println("des: "+dispositivo.getDescription());
            PcapPacketHandler<String> jpacketHandler=new PcapPacketHandler<String>() {;
            Tcp TCP=new Tcp();
-               Payload payl=new Payload();
+           Payload payl=new Payload();
                 
             @Override
             public void nextPacket(PcapPacket paqute, String user) {

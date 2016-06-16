@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import org.jnetpcap.*;
 import org.jnetpcap.nio.JBuffer;
-import org.jnetpcap.packet.JPacket;
+import org.jnetpcap.packet.format.FormatUtils;
 import org.jnetpcap.packet.JPacketHandler;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
@@ -23,8 +23,9 @@ import org.jnetpcap.protocol.tcpip.Udp;
  *
  * @author ELECTRONICA
  */
-public class CapturaRed  {
+public class CapturaRed extends Thread{
     private ArrayList<PcapIf> dispositivos;
+    private ArrayList<String> disposti;
     private StringBuilder error=new StringBuilder();
     private ArrayList packetes;
     private PcapIf dispositivo=null;
@@ -34,14 +35,21 @@ public class CapturaRed  {
      private boolean ban2=true;
      private int []vectorGu;
     private ArrayList<Trama> packets;
+    private String ip1;
 
     public CapturaRed() {
         dispositivos=new ArrayList<PcapIf>();
+        disposti=new ArrayList();
         packetes=new ArrayList();
         MP=new MindrayPacket();
         vectorGu=new int[2];
         packets=new ArrayList();
+        ip1=null;
     }
+    
+    
+    
+    
     
     
     
@@ -61,7 +69,7 @@ public class CapturaRed  {
      */
     public void listarDispositivos(){
         String descripcion=null;
-        for(int j=1;j<dispositivos.size();j++){
+        for(int j=0;j<dispositivos.size();j++){
             dispositivo=dispositivos.get(j);
             descripcion=dispositivo.getDescription();
             if(descripcion !=null){
@@ -70,11 +78,11 @@ public class CapturaRed  {
                 System.out.println("Descripcion del Dispositivo :"+descripcion);
             }
             dispositivosPorEnlace(j);
-            FrameVisual vs=new FrameVisual(dispositivo);
-            Thread hhiloNuevo=new Thread(vs);
-            hhiloNuevo.setPriority(Thread.MAX_PRIORITY);
-            hhiloNuevo.start();
-            vs.setVisible(true);
+            //FrameVisual vs=new FrameVisual(dispositivo);
+            //Thread hhiloNuevo=new Thread(vs);
+            //hhiloNuevo.setPriority(Thread.MAX_PRIORITY);
+            //hhiloNuevo.start();
+            //vs.setVisible(true);
         }
     }
         
@@ -113,27 +121,43 @@ public class CapturaRed  {
            PcapPacketHandler<String> jpacketHandler=new PcapPacketHandler<String>() {;
                 Tcp TCP=new Tcp();
                 Ip4 ip=new Ip4();
-                Udp UDP=new Udp();
-        
-               
                 
-                
-              
             @Override
             public void nextPacket(PcapPacket paqute, String user) {
                 ArrayList packetDat=new ArrayList();
                  int auxiliar[]=new int[2];
-                    if(paqute.hasHeader(TCP.ID)){
-                        int tama=paqute.size();
+                 int tama;
+                 ip1="";
+                 
+                 byte []dip=new byte[4],fip=new byte[4];
+                    if(paqute.hasHeader(ip)){
+                        fip=paqute.getHeader(ip).source();
+                        String fuenteIp= FormatUtils.ip(fip);
+                        ip1=fuenteIp;
+                       
+                    if(buscarIp(fuenteIp)==false&&cargarDirecLoca().contains(fuenteIp)==false){
+                            synchronized(disposti){
+                            disposti.add(fuenteIp);
+                            disposti.notify();
+                            }
+                        }
+                    }
+                   if(paqute.hasHeader(TCP.ID)){
+                        tama=paqute.size();
                        paqute.getHeader(TCP);
-                       JBuffer buffer= paqute;
-                       byte array[]=buffer.getByteArray(0, tama);
+                       if(TCP.getPayloadLength()<9){
+                            Thread.yield();
+                        }
+                       //JBuffer buffer= paqute;
+                       if(TCP.getPayloadLength()!=0){
+                       byte array[]=TCP.getPayload();
+                       
                        System.out.println("fuente :"+TCP.source());
                        System.out.println("Destinio :"+TCP.destination());
                        System.out.println("Paquetes recibido el: "+new Date(paqute.getCaptureHeader().timestampInMillis()));
                        System.out.println("el tamaño del paqute capturado  :"+paqute.getCaptureHeader().caplen());
                        System.out.println("el tamño del paquete original :"+paqute.getCaptureHeader().wirelen());
-                       System.out.println(paqute);
+                       //System.out.println(paqute);
                        for(int i=0;i<array.length;i++){
                            packetDat.add(array[i]);
                        }
@@ -161,20 +185,20 @@ public class CapturaRed  {
                                vectorGu=auxiliar;
                                for(int i=0;i<packetDat.size();i++){
                                   ((ArrayList)packetes.get(0)).add(packetDat.get(i));
-                                   //System.out.printf("0x%02X",packetDat.get(i));
+                                  // System.out.printf("0x%02X",packetDat.get(i));
                                }
-                               System.out.println("tamaño :"+packetDat.size());
+                               //System.out.println("tamaño :"+packetDat.size());
                                packetDat=(ArrayList)packetes.get(0);
-                               System.out.println("tamaño :"+packetDat.size());
+                               //System.out.println("tamaño :"+packetDat.size());
                                packetes.remove(0);                            
-                               System.out.println("tamaño almacenado de paquetes :"+packetes.size());
-                               System.out.println("Sepaso a crear");
+                               //System.out.println("tamaño almacenado de paquetes :"+packetes.size());
+                              // System.out.println("Sepaso a crear");
                                crearPacket(tamn,packetDat);
                                 }
                            }
                        }else{
                            if(band==true&&tama!=0){
-                               System.out.println("SE PASO A CREAR Paquetes");
+                               //System.out.println("SE PASO A CREAR Paquetes");
                                crearPacket(tama, packetDat);
                            }
                        }
@@ -184,19 +208,23 @@ public class CapturaRed  {
                        System.out.println("########################");
                        //System.out.println(user);
                        //System.out.println(paqute.toHexdump());
-                   }
+                   }else{
+                    Thread.yield();
+                    }
+                  }    
                 }
             };
            pcap.loop(Pcap.LOOP_INFINITE, jpacketHandler, "useiro Yo");
            pcap.close();     
      }
        
-     /**
-      * 
-      * @param array
-      * @return 
-      */
-    public int contarPacket(ArrayList array) {
+  /**
+   * 
+   * 
+   * @param array
+   * @return 
+   */
+       public int contarPacket(ArrayList array) {
         String val="15015700";
         String cad=new String();
         int sali=0,valor;
@@ -245,15 +273,15 @@ public class CapturaRed  {
             }
         } 
     return sali;   
-    }
-
-    /**
-     * 
-     * 
-     * @param array
-     * @return 
-     */
-     public int[] buscarTamPacket(ArrayList array) {
+    } 
+       
+       
+       /**
+        * 
+        * @param array
+        * @return 
+        */
+    public int[] buscarTamPacket(ArrayList array) {
         String val="15015700";
         String cad=new String();
         int valor,aux,aux1;
@@ -313,6 +341,7 @@ public class CapturaRed  {
     return  valore;
     }
      
+     
     /**
      * This method return arrayList witch, the number descompose in untis.
      * @param number this is the number of descompose
@@ -339,6 +368,7 @@ public class CapturaRed  {
     int pos=0;
     for(int i=0;i<numPackets;i++){
         MindrayPacket packt=new MindrayPacket();
+        packt.setFuente(ip1);
         pos=packt.clasifydata(datas,pos);
         synchronized(packets){
             packets.add(packt);
@@ -349,6 +379,10 @@ public class CapturaRed  {
     return packets;
     }
     
+    /**
+     * 
+     * @return 
+     */
     public MindrayPacket returnPack(){
         if(packets.size()==0){
             synchronized(packets){
@@ -364,5 +398,88 @@ public class CapturaRed  {
         packets.remove(0);
         return mp1;
     }
+    
+    
+    /**
+     * 
+     * 
+     * @return 
+     */
+
+    public ArrayList<String> ipDisposit(){
+        if(disposti==null){
+        try{
+           synchronized(disposti){
+            disposti.wait();
+           }
+            }catch(InterruptedException ie){
+            ie.printStackTrace();
+            }
+        }
+    return disposti;
+    }
+    /**
+     * 
+     * 
+     * @param Ip
+     * @return 
+     */
+    public boolean buscarIp(String Ip){
+        boolean ban=false;
+        for(int i=0;i<disposti.size()&&ban==false;i++){
+            if(disposti.get(i).equals(Ip)){
+            ban=true;
+            }
+        }
+    return ban;
+    } 
+
+        
+    public ArrayList<PcapIf> getDispositivos() {
+        return dispositivos;
+    }
+
+    public void setDispositivos(ArrayList<PcapIf> dispositivos) {
+        this.dispositivos = dispositivos;
+    }
+
+    public PcapIf getDispositivo() {
+        return dispositivo;
+    }
+
+    public void setDispositivo(PcapIf dispositivo) {
+        this.dispositivo = dispositivo;
+    }
+    
+   
+   public ArrayList<String> dispositivosDeRed(){
+       ArrayList<String> dispsoti=new ArrayList();
+       for(int i=0;i<dispositivos.size();i++){
+           dispsoti.add(dispositivos.get(i).getDescription());
+       }
+       return dispsoti;
+   }
+   
+   public PcapIf buscaDisp(String descrip){
+        for(int i=0;i<dispositivos.size();i++){
+            if(dispositivos.get(i).getDescription().equals(descrip)){
+            dispositivo=dispositivos.get(i);
+            }
+        }
+        return dispositivo;
+   }
+
+   public String cargarDirecLoca(){
+       ArrayList<PcapAddr> actual=(ArrayList<PcapAddr>) dispositivo.getAddresses();
+       return actual.get(0).getAddr().toString();
+   }
+   
+    @Override
+    public void run() {
+        capturarDatosDeRed(dispositivo);
+    }
+   
+   
+   
     
 }

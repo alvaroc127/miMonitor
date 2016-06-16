@@ -19,6 +19,7 @@ public class MindrayPacket implements Trama{
     /**
      * Atribute of class mindrayPacket
      */
+    private String fuente;
     private Header enca;
     private ArrayList<Subtrama> subtramas;
     private int tam;
@@ -27,6 +28,7 @@ public class MindrayPacket implements Trama{
      * Constructor overload
      */
     public MindrayPacket() {
+        fuente =null;
         enca=new Header();
         subtramas=new ArrayList();
     }
@@ -45,6 +47,22 @@ public class MindrayPacket implements Trama{
 
     public void setSubtramas(ArrayList<Subtrama> subtramas) {
         this.subtramas = subtramas;
+    }
+
+    public String getFuente() {
+        return fuente;
+    }
+
+    public void setFuente(String fuente) {
+        this.fuente = fuente;
+    }
+
+    public int getTam() {
+        return tam;
+    }
+
+    public void setTam(int tam) {
+        this.tam = tam;
     }
 
     

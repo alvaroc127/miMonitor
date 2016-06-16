@@ -6,9 +6,14 @@
 package Vista;
 
 
+
+import Controlador.ControladoPorDispo;
+import Controlador.ControladorCapRed;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import snifer2.CapturaPorDispositivo;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import org.jnetpcap.PcapIf;
 import snifer2.MindrayPacket;
@@ -17,30 +22,31 @@ import snifer2.MindrayPacket;
  *
  * @author ELECTRONICA
  */
-public class FrameVisual extends JFrame implements Runnable{
+public class FrameVisual extends JFrame implements Runnable,ActionListener{
     private final static int COLUMNAS =1;
-    private final static int FILAS=7;
-    private CapturaPorDispositivo cpd;
-    private Thread hiloDispo;
+    private final static int FILAS=8;
+    private String ip;
     private ArrayList<PanelVisual> panels=new ArrayList();
+    private ControladoPorDispo cpd;
+    private JButton btn;
     
+ 
 
-
-    public FrameVisual(PcapIf dispo){
-       cpd=new CapturaPorDispositivo(dispo);
-       hiloDispo=new Thread(cpd);
-       hiloDispo.setPriority(Thread.NORM_PRIORITY);
-       hiloDispo.start();
+    public FrameVisual(String ip){
+        this.ip=ip;
        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        getContentPane().setLayout(new GridLayout(FILAS, COLUMNAS));
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        for(int i=0;i<FILAS;i++){
+        for(int i=0;i<FILAS-1;i++){
           PanelVisual pa=new PanelVisual(i);
           Thread hiloP=new Thread(pa);
           hiloP.start();
           panels.add(pa);
           getContentPane().add(pa);
         }
+        btn=new JButton("Salida");
+        btn.addActionListener(this);
+        getContentPane().add(btn);
     }
     
     public void ClasifiData(MindrayPacket mp){
@@ -103,13 +109,46 @@ public class FrameVisual extends JFrame implements Runnable{
         }
     }
  }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public ArrayList<PanelVisual> getPanels() {
+        return panels;
+    }
+
+    public void setPanels(ArrayList<PanelVisual> panels) {
+        this.panels = panels;
+    }
+
+   
+    
+    
     
     
     
     @Override
     public void run() {
         do{
-        ClasifiData(cpd.returnPack());
+            System.out.println("inicio el hilo");
+            MindrayPacket mp= ControladorCapRed.Rpacket();
+            System.out.println(mp.getFuente());
+            System.out.println(ip+"la ip");
+            if(ip.equals(mp.getFuente())){
+                ClasifiData(mp);
+            }
         }while(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource()==btn){
+            this.setVisible(false);
+        }
     }
 }
