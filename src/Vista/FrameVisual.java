@@ -7,7 +7,6 @@ package Vista;
 
 
 
-import Controlador.ControladoPorDispo;
 import Controlador.ControladorCapRed;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -27,7 +26,6 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
     private final static int FILAS=8;
     private String ip;
     private ArrayList<PanelVisual> panels=new ArrayList();
-    private ControladoPorDispo cpd;
     private JButton btn;
     
  
@@ -135,13 +133,17 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
     @Override
     public void run() {
         do{
-            System.out.println("inicio el hilo");
+            //System.out.println("inicio el hilo");
             MindrayPacket mp= ControladorCapRed.Rpacket();
-            System.out.println(mp.getFuente());
-            System.out.println(ip+"la ip");
+            //System.out.println(mp.getFuente());
+            //System.out.println(ip+"la ip");
             if(ip.equals(mp.getFuente())){
                 ClasifiData(mp);
+            }else{
+                ControladorCapRed.adicionarPacket(mp);                                                                                                                                                                                                                                                                                 
+            
             }
+            //DEBE DELVOLVER LOS PAQUETES QUE NO SE USARON
         }while(true);
     }
 

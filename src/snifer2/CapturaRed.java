@@ -5,18 +5,15 @@
  */
 package snifer2;
 
-import Vista.FrameVisual;
+
 import java.util.ArrayList;
 import java.util.Date;
 import org.jnetpcap.*;
-import org.jnetpcap.nio.JBuffer;
 import org.jnetpcap.packet.format.FormatUtils;
-import org.jnetpcap.packet.JPacketHandler;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
 import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.tcpip.Tcp;
-import org.jnetpcap.protocol.tcpip.Udp;
 
 
 /**
@@ -36,7 +33,10 @@ public class CapturaRed extends Thread{
      private int []vectorGu;
     private ArrayList<Trama> packets;
     private String ip1;
-
+    
+    /**
+     * 
+     */
     public CapturaRed() {
         dispositivos=new ArrayList<PcapIf>();
         disposti=new ArrayList();
@@ -48,7 +48,21 @@ public class CapturaRed extends Thread{
     }
     
     
-    
+     public ArrayList<PcapIf> getDispositivos() {
+        return dispositivos;
+    }
+
+    public void setDispositivos(ArrayList<PcapIf> dispositivos) {
+        this.dispositivos = dispositivos;
+    }
+
+    public PcapIf getDispositivo() {
+        return dispositivo;
+    }
+
+    public void setDispositivo(PcapIf dispositivo) {
+        this.dispositivo = dispositivo;
+    }
     
     
     
@@ -432,26 +446,12 @@ public class CapturaRed extends Thread{
             }
         }
     return ban;
-    } 
-
-        
-    public ArrayList<PcapIf> getDispositivos() {
-        return dispositivos;
-    }
-
-    public void setDispositivos(ArrayList<PcapIf> dispositivos) {
-        this.dispositivos = dispositivos;
-    }
-
-    public PcapIf getDispositivo() {
-        return dispositivo;
-    }
-
-    public void setDispositivo(PcapIf dispositivo) {
-        this.dispositivo = dispositivo;
     }
     
-   
+   /**
+    * 
+    * @return 
+    */
    public ArrayList<String> dispositivosDeRed(){
        ArrayList<String> dispsoti=new ArrayList();
        for(int i=0;i<dispositivos.size();i++){
@@ -459,7 +459,11 @@ public class CapturaRed extends Thread{
        }
        return dispsoti;
    }
-   
+   /**
+    * 
+    * @param descrip
+    * @return 
+    */
    public PcapIf buscaDisp(String descrip){
         for(int i=0;i<dispositivos.size();i++){
             if(dispositivos.get(i).getDescription().equals(descrip)){
@@ -468,7 +472,10 @@ public class CapturaRed extends Thread{
         }
         return dispositivo;
    }
-
+   /**
+    * 
+    * @return 
+    */
    public String cargarDirecLoca(){
        ArrayList<PcapAddr> actual=(ArrayList<PcapAddr>) dispositivo.getAddresses();
        return actual.get(0).getAddr().toString();
@@ -479,7 +486,12 @@ public class CapturaRed extends Thread{
         capturarDatosDeRed(dispositivo);
     }
    
-   
+   public  void insertaPaquete(MindrayPacket mp){
+       synchronized(packets){
+       packets.notify();
+       packets.add(mp);
+               }
+   }
    
     
 }

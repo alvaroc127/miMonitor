@@ -91,4 +91,8 @@ public class ControladorCapRed {
         capr.start();
     }
     
+    public static void adicionarPacket(MindrayPacket mp){
+        capr.insertaPaquete(mp);
+    }
+    
 }
