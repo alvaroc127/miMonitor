@@ -70,7 +70,8 @@ public class MindrayPacket implements Trama{
     /**
      * this is metod of clasification the diferent datas
      * of the packet.
-     * @param dat are the datas from trama.
+     * @param data are the datas from trama.
+     * @param post representan la posicion dentro del array de la carga util
      * @return null.
      */
     

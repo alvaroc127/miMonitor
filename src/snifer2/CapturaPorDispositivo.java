@@ -18,7 +18,7 @@ import org.jnetpcap.protocol.tcpip.Tcp;
  * This class implements Runnable interface for proced capture networck of a dispositiv
  * @author ELECTRONICA
  * @created 08/06/2016
- * @version 4.0
+ * @version 1.0
  */
 public class CapturaPorDispositivo implements Runnable{
      private MindrayPacket MP;
@@ -31,12 +31,18 @@ public class CapturaPorDispositivo implements Runnable{
      private ArrayList packetes;
      private int tamn;
 
+     
+     /**
+      * controlador de la clase captura por dispositivo
+      */
     public CapturaPorDispositivo() {
         
     }
     
-    
-    
+    /**
+     * controlador sobre cargado de captura por dispositivo
+     * @param dispo dispositivo
+     */
     public CapturaPorDispositivo(PcapIf dispo){
     this.dispositivo=dispo;
     MP=new MindrayPacket();
@@ -197,12 +203,7 @@ public class CapturaPorDispositivo implements Runnable{
     return sali;   
     }
 
-    /**
-     * 
-     * 
-     * @param array
-     * @return 
-     */
+    
      public int[] buscarTamPacket(ArrayList array) {
         String val="15015700";
         String cad=new String();
@@ -279,12 +280,7 @@ public class CapturaPorDispositivo implements Runnable{
     return descoNum;
     }  
        
-    /**
-     * 
-     * @param numPackets
-     * @param datas
-     * @return 
-     */
+    
     public void crearPacket(int numPackets,ArrayList datas){
     int pos=0;
     for(int i=0;i<numPackets;i++){

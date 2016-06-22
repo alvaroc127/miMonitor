@@ -93,6 +93,7 @@ public class Header {
      * This method permited the search start,of val from header segment of packet
      *  myndray. in the datas from networck
      * @param array be datas fron networck
+     * @param post hace referencia ala posicion dentro del array de datos
      * @return sali is a posicion in the vector.
      */
     
@@ -215,9 +216,9 @@ public class Header {
     
     /**
      * This Method load the zeros low, from packet mindray
-     * @param pos
-     * @param array
-     * @return 
+     * @param pos posicion dentro de array de datos
+     * @param array carga util de la trama
+     * @return posicion final dentro del array de la carga util
      */
     public int Findlow_zer(int pos, ArrayList array){
         for(int j=0;j<this.low_zer.length;j++){
@@ -246,11 +247,10 @@ public class Header {
     }
     
     /**
-     * 
-     * 
-     * @param pos
-     * @param array
-     * @return 
+     * carga la constante1 del paquete
+     * @param pos hace referencia a la posicion dentro de la carga util
+     * @param array es la carga util de datos.
+     * @return la posicion dentro del array
      */
     public int FindConst1(int pos,ArrayList array){
         this.conts1[0]=(byte)array.get(++pos);
@@ -265,10 +265,10 @@ public class Header {
     }
     
     /**
-     * 
-     * @param pos
-     * @param array
-     * @return 
+     * carga el code 2 del array 
+     * @param pos hace referencia a la pos del array
+     * @param array arreglo de datos del array
+     * @return  la posicion dentro del arreglo de datos
      */
     
     public int FindCode2(int pos,ArrayList array){
@@ -281,8 +281,8 @@ public class Header {
     }
     
     /**
-     * 
-     * @return 
+     * retorna el tamaño de un paquete de datos
+     * @return un entero con el tamaño del paquete
      */
     public int sizePacket(){
         String var=new String();
@@ -382,10 +382,9 @@ public class Header {
     }
     
     /**
-     * 
-     * 
+     * metodo que retorna la cantidad de bytes en la cabeza del segmento
+     *@return  un numero con la cantidad de bytes
     */
-    
     public int cantSize(){
        int  sie=0;
        sie+=start.length+size.length+Hi_ze.length+

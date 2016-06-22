@@ -8,6 +8,7 @@ package Vista;
 
 
 import Controlador.ControladorCapRed;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,7 +37,7 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
        getContentPane().setLayout(new GridLayout(FILAS, COLUMNAS));
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         for(int i=0;i<FILAS-1;i++){
-          PanelVisual pa=new PanelVisual(i);
+          PanelVisual pa=new PanelVisual(i); 
           Thread hiloP=new Thread(pa);
           hiloP.start();
           panels.add(pa);
@@ -63,6 +64,7 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
             switch(mp.getSubtramas().get(i).joinheader()){
                 case(h1):
                     panels.get(0).loadGrafic(mp.getSubtramas().get(i).getData());
+                    
                 break;
                         
                 case(h2):
@@ -137,11 +139,13 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
             MindrayPacket mp= ControladorCapRed.Rpacket();
             //System.out.println(mp.getFuente());
             //System.out.println(ip+"la ip");
+            if(mp!=null){
             if(ip.equals(mp.getFuente())){
                 ClasifiData(mp);
             }else{
                 ControladorCapRed.adicionarPacket(mp);                                                                                                                                                                                                                                                                                 
             
+            }
             }
             //DEBE DELVOLVER LOS PAQUETES QUE NO SE USARON
         }while(true);

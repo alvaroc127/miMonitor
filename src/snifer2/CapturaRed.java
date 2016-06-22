@@ -17,10 +17,15 @@ import org.jnetpcap.protocol.tcpip.Tcp;
 
 
 /**
- *
+ * clase de captura de red.
  * @author ELECTRONICA
+ * @version 1.0
+ * @created 21/06/2016
  */
 public class CapturaRed extends Thread{
+    /**
+     *atributos de captura de red 
+     */
     private ArrayList<PcapIf> dispositivos;
     private ArrayList<String> disposti;
     private StringBuilder error=new StringBuilder();
@@ -35,7 +40,7 @@ public class CapturaRed extends Thread{
     private String ip1;
     
     /**
-     * 
+     * constructor de captura de red
      */
     public CapturaRed() {
         dispositivos=new ArrayList<PcapIf>();
@@ -68,7 +73,7 @@ public class CapturaRed extends Thread{
     
     
     /**
-     * 
+     * metodo que obtiene los dispositivos de la red
      */
     public void obteneDispo(){
     ban=Pcap.findAllDevs(dispositivos, error);
@@ -79,7 +84,7 @@ public class CapturaRed extends Thread{
     }
     
     /**
-     * 
+     * metodo que lista los dispositivos de la red
      */
     public void listarDispositivos(){
         String descripcion=null;
@@ -101,8 +106,8 @@ public class CapturaRed extends Thread{
     }
         
     /**
-     * 
-     * @param indice 
+     * metodo que lista los dispositivos enlazados a la tarjeta de red
+     * @param indice se refiere al indice de las tarjetas de red.
      */
        public void dispositivosPorEnlace(int indice){
            ArrayList<PcapAddr> dispo=(ArrayList<PcapAddr>) dispositivos.get(indice).getAddresses();
@@ -115,9 +120,9 @@ public class CapturaRed extends Thread{
        }
        
      /**
-      * 
-      * 
-      * @param dispo 
+      * metodo que permite comenzar la captura de los paquetes de red
+      * con el dipositivo indicado
+      * @param dispo hace referencia al dispositivo de red
       */ 
        public void capturarDatosDeRed(PcapIf dispo){
            int alcanzeCaptura= 64*1024;
@@ -233,10 +238,9 @@ public class CapturaRed extends Thread{
      }
        
   /**
-   * 
-   * 
-   * @param array
-   * @return 
+   * permite contar los paquetes de red que viajan en una de red capturada
+   * @param array hace referencia a la carga util de la trama TCP
+   * @return el indice de la posicion en la carga util
    */
        public int contarPacket(ArrayList array) {
         String val="15015700";
@@ -291,9 +295,10 @@ public class CapturaRed extends Thread{
        
        
        /**
-        * 
-        * @param array
-        * @return 
+        * permite obtener el tamaño de un paquete Mindray
+        * @param array hace referencia a los datos de la carga util 
+        * @return un array con el tamaño de paquetes y la cantidad de bytes restantes
+        * de la carga util.
         */
     public int[] buscarTamPacket(ArrayList array) {
         String val="15015700";
@@ -373,10 +378,10 @@ public class CapturaRed extends Thread{
     }  
        
     /**
-     * 
-     * @param numPackets
-     * @param datas
-     * @return 
+     * metodo que permite crear los paquetes Mindray que viajen dentro de la carga util del TCP
+     * @param numPackets hace referencia al numero de paquetes que se desea crear
+     * @param datas son la carga util del fragmento TCP
+     * @return una lsita de los paquetes creados
      */
     public ArrayList<Trama> crearPacket(int numPackets,ArrayList datas){
     int pos=0;
@@ -394,8 +399,8 @@ public class CapturaRed extends Thread{
     }
     
     /**
-     * 
-     * @return 
+     * metodos que retorna los paquetes mindray creados
+     * @return un paquete Mindray
      */
     public MindrayPacket returnPack(){
         if(packets.size()==0){
@@ -415,9 +420,9 @@ public class CapturaRed extends Thread{
     
     
     /**
-     * 
-     * 
-     * @return 
+     * retornas una lista de las ip de los dispositivos 
+     * de las Ip
+     * @return listas de dispositivos de red
      */
 
     public ArrayList<String> ipDisposit(){
@@ -433,10 +438,9 @@ public class CapturaRed extends Thread{
     return disposti;
     }
     /**
-     * 
-     * 
-     * @param Ip
-     * @return 
+     * Metodo que busca una Ip dentro de una lista de Ip
+     * @param Ip hace referencia a la Ip que se esta buscando
+     * @return  un booleano que nos indicara el exito o fracaso de un buscado.
      */
     public boolean buscarIp(String Ip){
         boolean ban=false;
@@ -449,8 +453,8 @@ public class CapturaRed extends Thread{
     }
     
    /**
-    * 
-    * @return 
+    * entrega un lista de las tarjetas de red que se pueden escanear
+    * @return lista de tarjetas de red
     */
    public ArrayList<String> dispositivosDeRed(){
        ArrayList<String> dispsoti=new ArrayList();
@@ -460,9 +464,9 @@ public class CapturaRed extends Thread{
        return dispsoti;
    }
    /**
-    * 
-    * @param descrip
-    * @return 
+    * retorna el dispositivo con la descripcion solicitada
+    * @param descrip hace referencia a la descripcion del dispositivo
+    * @return  el dispositivo con la descripcion indicada
     */
    public PcapIf buscaDisp(String descrip){
         for(int i=0;i<dispositivos.size();i++){
@@ -473,12 +477,23 @@ public class CapturaRed extends Thread{
         return dispositivo;
    }
    /**
-    * 
-    * @return 
+    * metodo que retorna la direccion de la maquina local
+    * @return un string con la direccion local.
     */
    public String cargarDirecLoca(){
        ArrayList<PcapAddr> actual=(ArrayList<PcapAddr>) dispositivo.getAddresses();
        return actual.get(0).getAddr().toString();
+   }
+   
+   /**
+    * metodo que re inserta los paquetes en un lista de paquetes creados
+     * @param  mp los paquetes MIndray creados
+     */
+   public  void insertaPaquete(MindrayPacket mp){
+       synchronized(packets){
+       packets.notify();
+       packets.add(mp);
+               }
    }
    
     @Override
@@ -486,12 +501,8 @@ public class CapturaRed extends Thread{
         capturarDatosDeRed(dispositivo);
     }
    
-   public  void insertaPaquete(MindrayPacket mp){
-       synchronized(packets){
-       packets.notify();
-       packets.add(mp);
-               }
-   }
+    
+    
    
     
 }

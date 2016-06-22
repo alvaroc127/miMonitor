@@ -62,22 +62,20 @@ public class Subtrama {
         this.start = start;
     }
     /**
-     * 
-     * 
-     * @param pos
-     * @param array
-     * @return 
+     * carga el inicio de la subtrama 
+     * @param pos inidca la posicion dentro de la carga util
+     * @param array hace referencia al array de datos
+     * @return la posicion de array tras cargar los datos
      */
     public int findstart(int pos, ArrayList array){
     start=(byte)array.get(pos);
     return ++pos;
     }
     /**
-     * 
-     * 
-     * @param pos
-     * @param array
-     * @return 
+     * carga el tamaño de la subtrama
+     * @param pos posicion actual en el array de datos
+     * @param array hace referencia al array de datos
+     * @return  la posicion del array
      */
     public int findSize(int pos,ArrayList array){
     size[0]=(byte)array.get(pos);
@@ -85,23 +83,21 @@ public class Subtrama {
     return ++pos;
     }
     /**
-     * 
-     * 
-     * @param pos
-     * @param array
-     * @return 
+     * carga el byte final de la subtrama
+     * @param pos indica la posicion dentro del array de datos
+     * @param array datos de datos dentro de la trama 
+     * @return la posicion final del puntero dentro de array de datis
      */
     public int findEndh(int pos,ArrayList array){    
     endH=(byte)array.get(pos);
     return ++pos;
     }
     /**
-     * 
-     * 
-     * @param posI
-     * @param cant
-     * @param array
-     * @return 
+     * cargar los datos de la subtrama de inicio a fin
+     * @param posI posicion inicial para cargar los datos del arrau
+     * @param cant cantidad de datos que se deben cargar
+     * @param array de datos.
+     * @return la posicion dentro del array de datos
      */
     public int addData(int posI,int cant,ArrayList array){
         int cont=0;
@@ -115,7 +111,9 @@ public class Subtrama {
     
     
     /**
-     * 
+     * unifica los bytes que conforman la cabeza de la subtrama y los retorna
+     * como un string
+     * @return  cadena combertida de byte a enteros
      */
     public String joinheader(){
         String cad=new String();
@@ -126,10 +124,8 @@ public class Subtrama {
         return String.valueOf(Integer.parseInt(cad, 16));
     }
     /**
-     * 
-     * 
-     * 
-     * @return 
+     * retorna el tamaño de la subtrama 
+     * @return el tmañao que indica la subtrama
      */
     public int sizePSubtram(){
         String var=new String();
@@ -194,7 +190,8 @@ public class Subtrama {
 
     /**
      * 
-     * 
+     * tmaaño total de la sutrama
+     * @return entero con el tamaño de la subtrama
      */
       public int sizeSub(){
       return size.length+2;

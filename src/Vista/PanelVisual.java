@@ -122,8 +122,8 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
     
     
     /**
-     * 
-     * @param list 
+     * metodo que adiciona una lista a una lista acutal
+     * @param list la nueva lista a adicionar
      */
     public void loadGrafic(ArrayList list){
        synchronized(grafica){
@@ -135,8 +135,8 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
     
     
     /**
-     * 
-     * @return 
+     * metodo que retorna el elemento de la grafica
+     * @return retorna un elemento de la grafica
      */
     public int getElemnGrafic(){
         if(grafica.isEmpty()){
@@ -155,9 +155,8 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
         return re;
     }
     /**
-     * 
-     * 
-     * @return 
+     * hace referencia a los valores iniciales de la seria
+     * @return una lista de valores iniciales para la serie
      */
      private float[] valoresDeLaSerie() {
         float[] respuesta = new float[getCantidadPorSerie()];
@@ -166,52 +165,54 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
         	}
            return respuesta;
         }
+     
      /**
-      * 
-      * @return 
+      * permite identificar si la grafica cuenta con una URL
+      * @return un boolean con false o verdadero
       */
      private boolean tineUrl() {
          return false;
      }
      
      /**
-      * 
-      * @return 
+      * activa las herramientas de las grafica
+      * @return un booleano con la propiedad de activar o desactivar la  grafica
       */
      private boolean tienToolTip() {
          return true;
      }
+     
      /**
-      * 
-      * @return 
+      * activa la leyenda de la grafica
+      * @return un booleano con la leyenda de la grafica
       */
     private boolean tieneLeyenda() {
         return true;
     }
       /**
-       * 
-       * @return 
+       * identifica el nombre del eje Y
+       * @return un sitring con el nombre del EJE Y
        */          
     private String getEtiquetaDelasY() {
 	return "ECG";
     }
     /**
-     * 
-     * @return 
+     * genera el nombre de las X
+     * @return un string con el nombre de las X
      */
     private String getEtiquetaDelasX() {
        return "hh:mm:ss";
     }
     /**
-     * 
-     * @return 
+     * genera el titulo de la grafica
+     * @return un string del titulo
      */
     public String getTitulo() {
 	return "ECG";
     }
     /**
-     * 
-     * @return 
+     * hace referencia a la medica en la cual se cuantifican los datos
+     * @return un objeto de tipo millisecond
      */
      private Millisecond enMiSecond() {
 	return new Millisecond();
@@ -219,15 +220,15 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
     
     
     /**
-     * 
-     * @return 
+     * limita la cantidad de datos que se grafican por segundo
+     * @return la cantidad de datos graficados
      */
     public int getCantidadPorSerie() {
-        return 600; 
+        return 1024; 
     }
     /**
-     * 
-     * @return 
+     * permite especificar la cantidad de lineas por tendencia
+     * @return la cantidad de lineas a graficar
      */
     public int getCantidadDeSeries() {
         return 1;
@@ -401,7 +402,7 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
 
     @Override
     public void run() {
-        tiempo=new Timer(4,this);
+        tiempo=new Timer(8,this);
         tiempo.start();
     }
 }
