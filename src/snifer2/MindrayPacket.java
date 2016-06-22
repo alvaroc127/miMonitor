@@ -19,14 +19,18 @@ public class MindrayPacket implements Trama{
     /**
      * Atribute of class mindrayPacket
      */
-    private Header enca=new Header();
-    private ArrayList<Subtrama> subtramas=new ArrayList();
+    private String fuente;
+    private Header enca;
+    private ArrayList<Subtrama> subtramas;
     private int tam;
             
     /**
      * Constructor overload
      */
     public MindrayPacket() {
+        fuente =null;
+        enca=new Header();
+        subtramas=new ArrayList();
     }
 
     public Header getEnca() {
@@ -45,17 +49,34 @@ public class MindrayPacket implements Trama{
         this.subtramas = subtramas;
     }
 
+    public String getFuente() {
+        return fuente;
+    }
+
+    public void setFuente(String fuente) {
+        this.fuente = fuente;
+    }
+
+    public int getTam() {
+        return tam;
+    }
+
+    public void setTam(int tam) {
+        this.tam = tam;
+    }
+
     
       
     /**
-     * this is metod o clasification the diferent datas
+     * this is metod of clasification the diferent datas
      * of the packet.
-     * @param dat are the datas from trama.
+     * @param data are the datas from trama.
+     * @param post representan la posicion dentro del array de la carga util
      * @return null.
      */
     
     @Override
-    public int clasifydata(ArrayList data,int post) {
+    public int clasifydata(ArrayList data, int post) {
         int pos=enca.FindStart(data,post);
         if(pos!=-1){
             pos++;
@@ -70,7 +91,6 @@ public class MindrayPacket implements Trama{
                 pos=enca.FindCode1(pos, data);
                 pos=enca.FindConst1(pos, data);
                 pos=enca.FindCode2(pos, data);
-                enca.printHeader();
                 pos++;
                int tam1_aux=enca.sizePacket();
                tam=enca.cantSize();
@@ -82,20 +102,38 @@ public class MindrayPacket implements Trama{
                 //la subtrama se debe sacar en cualquier circustancia, pero si 
                 
             }
-        return ++pos;
+        return pos;
     }
 
     @Override
     public int cargarSubTram(ArrayList data, int pos) {
+        final String h6="2033669";
+        final String h7="2099205";
         Subtrama sub=new Subtrama();
         pos=sub.findstart(pos, data);
         pos=sub.findSize(pos, data);
         pos=sub.findEndh(pos, data);
         int tama=sub.sizePSubtram();
-        pos=sub.addData(pos, tama, data);
-        tam+=tama+sub.sizeSub();
-        System.out.println(tam);
-        sub.printSub();
+        //SI cabeza es ECG6 O ECG 7 duplicar la cantidad quelee
+        switch(sub.joinheader()){
+            
+        case(h6):
+            pos=sub.addData(pos, tama*2, data);
+            tam+=(tama*2)+sub.sizeSub();
+            break;
+            
+        case(h7):
+            pos=sub.addData(pos, tama*2, data);
+                tam+=(tama*2)+sub.sizeSub();
+             break;
+                
+           
+        default:
+            pos=sub.addData(pos, tama, data);
+               tam+=tama+sub.sizeSub(); 
+            break;
+        }
+        System.out.println("valor de  "+tam);
         subtramas.add(sub);
         return ++pos;
         //Adicionar la  subtrama
@@ -107,13 +145,7 @@ public class MindrayPacket implements Trama{
         **/
     }
     
-    public void mostrarPaqueteMind(){
-    
-    
-    
-    
-    
-    }
+   
     
     
 }
