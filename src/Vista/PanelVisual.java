@@ -7,11 +7,14 @@ package Vista;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.JLabel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -25,10 +28,14 @@ import org.jfree.data.time.Millisecond;
  *
  * @author ELECTRONICA
  */
-public class PanelVisual extends JPanel implements ActionListener,Runnable{
+public class PanelVisual extends JPanel implements ActionListener{
     private ArrayList grafica=new ArrayList();
     private DynamicTimeSeriesCollection contSer;
     private JFreeChart gaficaTiempo;
+    private JLabel Frecuen;
+    private JLabel Mayor;
+    private JLabel Men;
+    private JPanel pan;
     private int segundo;
     private int minuto;
     private int hora;
@@ -43,6 +50,7 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
 
     public PanelVisual(int val) {
         this.val=val;
+        tiempo=new Timer(8,this);
        contSer=new DynamicTimeSeriesCollection(getCantidadDeSeries(),getCantidadPorSerie());
        contSer.setTimeBase(new Millisecond(0, segundo, minuto, hora, dia=1,mes=1,anio=2016));
        contSer.addSeries(valoresDeLaSerie(), indiceSerie=0, nombreDeLaSerie="SEÑAL");
@@ -53,67 +61,116 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
 											tieneLeyenda(),
 											tienToolTip(),
 											tineUrl()
-       );
+        );
        gaficaTiempo.setBackgroundPaint(new Color(0, 0, 0, 0));
         XYPlot plot=gaficaTiempo.getXYPlot();
         plot.setBackgroundPaint(Color.BLACK);
         XYLineAndShapeRenderer render=(XYLineAndShapeRenderer)plot.getRenderer();
          ChartPanel panelGraf=new ChartPanel(gaficaTiempo);
         setLayout(new BorderLayout());
+        tiempo.start();
        switch(this.val){
            
         case(0):
-            plot.getRangeAxis().setRange(10,220);
+            Frecuen=new JLabel();
+            Frecuen.setFont(new Font("Tahoma",1,90));
+             Frecuen.setForeground(Color.GREEN);
+            add(Frecuen,BorderLayout.EAST);
+            //plot.getRangeAxis().setRange(10,220);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.GREEN);
             add(panelGraf, BorderLayout.CENTER);
         break;
            
         case(1):
-            plot.getRangeAxis().setRange(10,200);
+            //plot.getRangeAxis().setRange(10,200);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.GREEN);
             add(panelGraf, BorderLayout.CENTER);
         break;
             
         case(2):
-            plot.getRangeAxis().setRange(115,135);
+           // plot.getRangeAxis().setRange(115,135);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.GREEN);
             add(panelGraf, BorderLayout.CENTER);
         break;
             
             
         case(3):
-            plot.getRangeAxis().setRange(90,190);
+           // plot.getRangeAxis().setRange(90,190);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.yellow);
-            add(panelGraf, BorderLayout.WEST);
+            add(panelGraf, BorderLayout.CENTER);
         break;
             
         case(4):
-              plot.getRangeAxis().setRange(0,100);
+            pan=new JPanel();
+            pan.setLayout(new BorderLayout());
+            Mayor=new JLabel();
+            Frecuen=new JLabel();
+            Frecuen.setFont(new Font("Tahoma",0,50));
+            Frecuen.setForeground(Color.CYAN);
+            Mayor.setFont(new Font("Tahoma",1,60));
+            pan.add(Frecuen,BorderLayout.SOUTH);
+            pan.add(Mayor,BorderLayout.CENTER);
+            //plot.getRangeAxis().setRange(0,100);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.CYAN);
-            add(panelGraf, BorderLayout.WEST);
+            add(panelGraf,BorderLayout.CENTER);
+            add(pan,BorderLayout.EAST);
         break;
            
             
         case(5):
-            plot.getRangeAxis().setRange(0,220);
-            plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.RED);
-            add(panelGraf, BorderLayout.WEST);
+            contSer=new DynamicTimeSeriesCollection(getCantidadDeSeries(),768);
+       contSer.setTimeBase(new Millisecond(0, segundo, minuto, hora, dia=1,mes=1,anio=2016));
+       contSer.addSeries(valoresDeLaSerie(), indiceSerie=0, nombreDeLaSerie="SEÑAL");
+       gaficaTiempo=ChartFactory.createTimeSeriesChart(                                 getTitulo(),
+											getEtiquetaDelasX(),
+											getEtiquetaDelasY(),
+											contSer,
+											tieneLeyenda(),
+											tienToolTip(),
+											tineUrl()
+        );
+       gaficaTiempo.setBackgroundPaint(new Color(0, 0, 0, 0));
+        XYPlot plot1=gaficaTiempo.getXYPlot();
+        plot1.setBackgroundPaint(Color.BLACK);
+        XYLineAndShapeRenderer render1=(XYLineAndShapeRenderer)plot1.getRenderer();
+         ChartPanel panelGraf1=new ChartPanel(gaficaTiempo);
+            pan=new JPanel();
+            pan.setLayout(new BorderLayout());
+            Mayor=new JLabel();
+            Men=new JLabel();
+            Mayor.setFont(new Font("Tahoma",1,90));
+            Men.setFont(new Font("Tahoma",1,50));
+            pan.add(Mayor,BorderLayout.WEST);
+            pan.add(Men, BorderLayout.EAST);
+           // plot.getRangeAxis().setRange(0,220);
+            plot1.getRendererForDataset(plot1.getDataset(0)).setSeriesPaint(0, Color.RED);
+            add(panelGraf1, BorderLayout.CENTER);
+            add(pan,BorderLayout.EAST);
         break;
             
         case(6):
-            plot.getRangeAxis().setRange(0,35);
+            pan=new JPanel();
+            pan.setLayout(new BorderLayout());
+            Mayor=new JLabel();
+            Men=new JLabel("-");
+            Mayor.setFont(new Font("Tahoma",1,90));
+            Men.setFont(new Font("Tahome",1,50));
+            pan.add(Mayor,BorderLayout.WEST);
+            pan.add(Men,BorderLayout.EAST);
+            //plot.getRangeAxis().setRange(0,35);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.YELLOW);
-               add(panelGraf, BorderLayout.WEST); 
+            add(panelGraf, BorderLayout.CENTER); 
+            add(pan,BorderLayout.EAST);
         break;
             
         case(7):
-            plot.getRangeAxis().setRange(20,220);
+            //plot.getRangeAxis().setRange(20,220);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.YELLOW);
             add(panelGraf, BorderLayout.WEST);
         break;
             
        case(8):
-           plot.getRangeAxis().setRange(20,220);
+           //plot.getRangeAxis().setRange(20,220);
             plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.YELLOW);
            add(panelGraf, BorderLayout.WEST);
        break;
@@ -130,7 +187,6 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
         grafica.notify();
         grafica.addAll(list);
        }
-       
     }
     
     
@@ -224,7 +280,7 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
      * @return la cantidad de datos graficados
      */
     public int getCantidadPorSerie() {
-        return 1024; 
+        return 1280; 
     }
     /**
      * permite especificar la cantidad de lineas por tendencia
@@ -338,11 +394,7 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
               resul=getElemnGrafic()+getElemnGrafic();
              contSer.advanceTime();//avansa el tiempo     
             contSer.appendData(new float[]{resul});     
-            }else{
-            Thread.yield();
-        }
-           
-            
+            }
         break;
             
         case(6):
@@ -400,9 +452,16 @@ public class PanelVisual extends JPanel implements ActionListener,Runnable{
         
     }
 
-    @Override
-    public void run() {
-        tiempo=new Timer(8,this);
-        tiempo.start();
+    public synchronized void cargaFrecuen(int Fr){
+    Frecuen.setText(String.valueOf(Fr));
     }
+    
+    public synchronized void cargarMay(int may){
+    Mayor.setText(String.valueOf(may));
+    }
+    
+    public synchronized void cargaMen(int men){
+    Men.setText("/"+String.valueOf(men));
+    }
+    
 }

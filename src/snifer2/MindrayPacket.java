@@ -95,7 +95,7 @@ public class MindrayPacket implements Trama{
                int tam1_aux=enca.sizePacket();
                tam=enca.cantSize();
                 do{
-                     System.out.println(tam1_aux+" esto es ta "+tam);
+                     //System.out.println(tam1_aux+" esto es ta "+tam);
                     pos=cargarSubTram(data, pos);
                 }while(tam<tam1_aux);
                 tam=0;
@@ -133,7 +133,7 @@ public class MindrayPacket implements Trama{
                tam+=tama+sub.sizeSub(); 
             break;
         }
-        System.out.println("valor de  "+tam);
+        //System.out.println("valor de  "+tam);
         subtramas.add(sub);
         return ++pos;
         //Adicionar la  subtrama

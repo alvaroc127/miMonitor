@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import org.jnetpcap.PcapIf;
+import snifer2.CalculadorParametros;
 import snifer2.MindrayPacket;
 
 /**
@@ -26,8 +27,10 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
     private final static int COLUMNAS =1;
     private final static int FILAS=8;
     private String ip;
-    private ArrayList<PanelVisual> panels=new ArrayList();
+    private ArrayList<PanelVisual> panels;
+    private ArrayList<CalculadorParametros> calPs;
     private JButton btn;
+    
     
  
 
@@ -36,11 +39,13 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        getContentPane().setLayout(new GridLayout(FILAS, COLUMNAS));
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+        panels=new ArrayList();
+        calPs=new ArrayList();
         for(int i=0;i<FILAS-1;i++){
-          PanelVisual pa=new PanelVisual(i); 
-          Thread hiloP=new Thread(pa);
-          hiloP.start();
+          PanelVisual pa=new PanelVisual(i);
+          CalculadorParametros cp=new CalculadorParametros();
           panels.add(pa);
+          calPs.add(cp);
           getContentPane().add(pa);
         }
         btn=new JButton("Salida");
@@ -60,15 +65,22 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
         final String h9="73746";
         if(mp!=null){
         for(int i=0;i<mp.getSubtramas().size();i++){
-            System.out.println("\n valor subtrama :"+mp.getSubtramas().get(i).joinheader());
+            //System.out.println("\n valor subtrama :"+mp.getSubtramas().get(i).joinheader());
             switch(mp.getSubtramas().get(i).joinheader()){
                 case(h1):
                     panels.get(0).loadGrafic(mp.getSubtramas().get(i).getData());
-                    
+                    calPs.get(0).alamacenarlistaDat(mp.getSubtramas().get(i).getData());
+                    calPs.get(0).setValCam(400);
+                    if(calPs.get(0).getListaDat().size()>=1536){
+                       calPs.get(0).generaPrimFiltroDig();
+                      calPs.get(0).getListaDat().clear();
+                       calPs.get(0).getDeltas().clear();
+                    }
+                  panels.get(0).cargaFrecuen(calPs.get(0).getFr());
                 break;
                         
                 case(h2):
-                    panels.get(1).loadGrafic(mp.getSubtramas().get(i).getData());    
+                    panels.get(1).loadGrafic(mp.getSubtramas().get(i).getData());
                 break;
                 
                 case (h3):
@@ -78,20 +90,49 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
                     
                     
                 case(h4):
-                    panels.get(3).loadGrafic(mp.getSubtramas().get(i).getData());    
+                    panels.get(3).loadGrafic(mp.getSubtramas().get(i).getData());
                 break;
                     
                 case(h5):
-                    panels.get(4).loadGrafic(mp.getSubtramas().get(i).getData());    
-                    
+                    panels.get(4).loadGrafic(mp.getSubtramas().get(i).getData());
+                     calPs.get(4).alamacenarlistaDat(mp.getSubtramas().get(i).getData());
+                    calPs.get(4).setValCam(160);
+                    if(calPs.get(4).getListaDat().size()>=1536){
+                       calPs.get(4).generaPrimFiltroDig();
+                       calPs.get(4).buscaMay();
+                      calPs.get(4).getListaDat().clear();
+                       calPs.get(4).getDeltas().clear();
+                    }
+                  panels.get(4).cargarMay(calPs.get(4).getMay());
+                  panels.get(4).cargaFrecuen(calPs.get(4).getFr());
                 break;
             
                 case(h6):
-                    panels.get(5).loadGrafic(mp.getSubtramas().get(i).getData());    
+                    panels.get(5).loadGrafic(mp.getSubtramas().get(i).getData());
+                     calPs.get(5).alamacenarlistaDat(mp.getSubtramas().get(i).getData());
+                    //calPs.get(5).setValCam(164);
+                    if(calPs.get(5).getListaDat().size()>=1536){
+                      // calPs.get(5).generaPrimFiltroDig();
+                       calPs.get(5).buscaMay();
+                       calPs.get(5).buscaMen();
+                      calPs.get(5).getListaDat().clear();
+                      //calPs.get(5).getDeltas().clear();
+                    }
+                  panels.get(5).cargarMay(calPs.get(5).getMay());
+                  panels.get(5).cargaMen(calPs.get(5).getMen());
                 break;
                     
                 case(h7):
-                    panels.get(6).loadGrafic(mp.getSubtramas().get(i).getData());    
+                    panels.get(6).loadGrafic(mp.getSubtramas().get(i).getData());
+                    calPs.get(6).alamacenarlistaDat(mp.getSubtramas().get(i).getData());
+                    if(calPs.get(6).getListaDat().size()>=1536){
+                    calPs.get(6).buscaMay();
+                    calPs.get(6).buscaMen();
+                    calPs.get(6).getListaDat().clear();
+                    //calPs.get(5).getDeltas().clear();
+                    }
+                    panels.get(6).cargaMen(calPs.get(6).getMen());
+                    panels.get(6).cargarMay(calPs.get(6).getMay());
                 break; 
                     
                 case(h8):
@@ -143,11 +184,9 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
             if(ip.equals(mp.getFuente())){
                 ClasifiData(mp);
             }else{
-                ControladorCapRed.adicionarPacket(mp);                                                                                                                                                                                                                                                                                 
-            
+                ControladorCapRed.adicionarPacket(mp);
+                }
             }
-            }
-            //DEBE DELVOLVER LOS PAQUETES QUE NO SE USARON
         }while(true);
     }
 
