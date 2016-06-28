@@ -44,6 +44,7 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
         for(int i=0;i<FILAS-1;i++){
           PanelVisual pa=new PanelVisual(i);
           CalculadorParametros cp=new CalculadorParametros();
+          pa.setVisible(false);
           panels.add(pa);
           calPs.add(cp);
           getContentPane().add(pa);
@@ -77,26 +78,29 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
                        calPs.get(0).getDeltas().clear();
                     }
                   panels.get(0).cargaFrecuen(calPs.get(0).getFr());
+                  panels.get(0).setVisible(true);
                 break;
                         
                 case(h2):
                     panels.get(1).loadGrafic(mp.getSubtramas().get(i).getData());
+                    panels.get(1).setVisible(true);
                 break;
                 
                 case (h3):
                     panels.get(2).loadGrafic(mp.getSubtramas().get(i).getData());    
-                    
+                    panels.get(2).setVisible(true);
                 break;
                     
                     
                 case(h4):
                     panels.get(3).loadGrafic(mp.getSubtramas().get(i).getData());
+                    panels.get(3).setVisible(true);
                 break;
                     
                 case(h5):
                     panels.get(4).loadGrafic(mp.getSubtramas().get(i).getData());
                      calPs.get(4).alamacenarlistaDat(mp.getSubtramas().get(i).getData());
-                    calPs.get(4).setValCam(160);
+                    calPs.get(4).setValCam(168);
                     if(calPs.get(4).getListaDat().size()>=1536){
                        calPs.get(4).generaPrimFiltroDig();
                        calPs.get(4).buscaMay();
@@ -105,6 +109,7 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
                     }
                   panels.get(4).cargarMay(calPs.get(4).getMay());
                   panels.get(4).cargaFrecuen(calPs.get(4).getFr());
+                  panels.get(4).setVisible(true);
                 break;
             
                 case(h6):
@@ -120,6 +125,7 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
                     }
                   panels.get(5).cargarMay(calPs.get(5).getMay());
                   panels.get(5).cargaMen(calPs.get(5).getMen());
+                  panels.get(5).setVisible(true);
                 break;
                     
                 case(h7):
@@ -133,6 +139,7 @@ public class FrameVisual extends JFrame implements Runnable,ActionListener{
                     }
                     panels.get(6).cargaMen(calPs.get(6).getMen());
                     panels.get(6).cargarMay(calPs.get(6).getMay());
+                    panels.get(6).setVisible(true);
                 break; 
                     
                 case(h8):

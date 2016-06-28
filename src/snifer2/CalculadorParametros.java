@@ -158,13 +158,16 @@ public class CalculadorParametros {
         int may=(int)filtroDig.get(0);
         ArrayList listaValida=new ArrayList();
     for(int j=0;j<filtroDig.size();j++){
-        if((int)filtroDig.get(j)>valCam&&(int)filtroDig.get(j)>=may){
+        System.out.println("valores del filtro "+(int)filtroDig.get(j));
+        if(j+1<filtroDig.size()){
+        if((int)filtroDig.get(j)>=valCam&&(int)filtroDig.get(j)>=may&&(int)filtroDig.get(j)!=(int)filtroDig.get(j+1)){
             may=(int)filtroDig.get(j);
             listaValida.add(1);
             }else{
                 listaValida.add(0);
             }
         }
+    }
         buscarUnos(listaValida);
     return listaValida;
     }
